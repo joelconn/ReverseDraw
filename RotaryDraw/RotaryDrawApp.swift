@@ -1,32 +1,42 @@
-//
-//  RotaryDrawApp.swift
-//  RotaryDraw
-//
-//  Created by Joel Conn on 6/6/26.
-//
-
 import SwiftUI
-import SwiftData
 
 @main
 struct RotaryDrawApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @State private var eventState = EventState()
+    #if os(macOS)
+    @State private var windowManager = WindowManager()
+    #endif
 
     var body: some Scene {
-        WindowGroup {
+        #if os(macOS)
+        Window("RotaryDraw — Operator", id: "operator") {
             ContentView()
+                .environment(eventState)
+                .onAppear {
+                    windowManager.openAudienceWindow(eventState: eventState)
+                }
         }
-        .modelContainer(sharedModelContainer)
+        .defaultSize(width: 900, height: 680)
+        #else
+        WindowGroup {
+            iPadRootView()
+                .environment(eventState)
+        }
+        #endif
     }
 }
+
+#if os(iOS)
+struct iPadRootView: View {
+    @Environment(EventState.self) private var state
+
+    var body: some View {
+        TabView {
+            ContentView()
+                .tabItem { Label("Operator", systemImage: "slider.horizontal.3") }
+            AudienceView()
+                .tabItem { Label("Audience", systemImage: "tv") }
+        }
+    }
+}
+#endif

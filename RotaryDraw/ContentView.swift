@@ -1,59 +1,27 @@
-//
-//  ContentView.swift
-//  RotaryDraw
-//
-//  Created by Joel Conn on 6/6/26.
-//
-
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Environment(EventState.self) private var state
+    @State private var showRestoreAlert = false
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        Group {
+            if state.phase == .setup {
+                SetupView()
+            } else {
+                OperatorView()
             }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+        .alert("Restore Previous Session?", isPresented: $showRestoreAlert) {
+            Button("Resume") { state.loadSession() }
+            Button("Start Fresh", role: .destructive) { state.reset() }
+        } message: {
+            Text("A previous event session was found. Continue where you left off?")
         }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+        .onAppear {
+            if PersistenceManager.shared.hasSession {
+                showRestoreAlert = true
             }
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
