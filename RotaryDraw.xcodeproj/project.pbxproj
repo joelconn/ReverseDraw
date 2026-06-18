@@ -6,13 +6,35 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3DEDF5F7075C77550C5F1B96 /* CodableCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DB9A7897B4650830862CA6 /* CodableCompatibilityTests.swift */; };
+		AA63E441298212F43B4B207C /* EventStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A57D04090D51832927D488 /* EventStateTests.swift */; };
+		BE4C1B18A460277D256FDBC8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA411DF8117ECA4D300A33F /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		68B361696F301A6DDCD80BFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A98C1892FD47F6B008A49AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A98C1902FD47F6B008A49AD;
+			remoteInfo = RotaryDraw;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4A98C1912FD47F6B008A49AD /* RotaryDraw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RotaryDraw.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CEACCAAC4CD44C89391413F /* RotaryDrawTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RotaryDrawTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AA411DF8117ECA4D300A33F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A7DB9A7897B4650830862CA6 /* CodableCompatibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CodableCompatibilityTests.swift; path = CodableCompatibilityTests.swift; sourceTree = "<group>"; };
+		E6A57D04090D51832927D488 /* EventStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EventStateTests.swift; path = EventStateTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4A98C1932FD47F6B008A49AD /* RotaryDraw */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = RotaryDraw;
 			sourceTree = "<group>";
 		};
@@ -26,14 +48,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		93176ECAFAC2E02D599996D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE4C1B18A460277D256FDBC8 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		47742EDAF430B21AF16C4C05 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C16D74B6F739CD696C964B2A /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4A98C1882FD47F6B008A49AD = {
 			isa = PBXGroup;
 			children = (
 				4A98C1932FD47F6B008A49AD /* RotaryDraw */,
 				4A98C1922FD47F6B008A49AD /* Products */,
+				47742EDAF430B21AF16C4C05 /* Frameworks */,
+				AF12D5B167564308060806AF /* RotaryDrawTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +81,27 @@
 			isa = PBXGroup;
 			children = (
 				4A98C1912FD47F6B008A49AD /* RotaryDraw.app */,
+				4CEACCAAC4CD44C89391413F /* RotaryDrawTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AF12D5B167564308060806AF /* RotaryDrawTests */ = {
+			isa = PBXGroup;
+			children = (
+				E6A57D04090D51832927D488 /* EventStateTests.swift */,
+				A7DB9A7897B4650830862CA6 /* CodableCompatibilityTests.swift */,
+			);
+			name = RotaryDrawTests;
+			path = RotaryDrawTests;
+			sourceTree = "<group>";
+		};
+		C16D74B6F739CD696C964B2A /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				9AA411DF8117ECA4D300A33F /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,11 +124,27 @@
 				4A98C1932FD47F6B008A49AD /* RotaryDraw */,
 			);
 			name = RotaryDraw;
-			packageProductDependencies = (
-			);
 			productName = RotaryDraw;
 			productReference = 4A98C1912FD47F6B008A49AD /* RotaryDraw.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A3BD8BABF614E494133772E1 /* RotaryDrawTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22A14B4649A39AE48174A0B2 /* Build configuration list for PBXNativeTarget "RotaryDrawTests" */;
+			buildPhases = (
+				DD31801BA440C5FAD278C460 /* Sources */,
+				93176ECAFAC2E02D599996D8 /* Frameworks */,
+				6BA7527EFF1CADC95053314A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF9270A45301C0999CAF838E /* PBXTargetDependency */,
+			);
+			name = RotaryDrawTests;
+			productName = RotaryDrawTests;
+			productReference = 4CEACCAAC4CD44C89391413F /* RotaryDrawTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -101,12 +176,20 @@
 			projectRoot = "";
 			targets = (
 				4A98C1902FD47F6B008A49AD /* RotaryDraw */,
+				A3BD8BABF614E494133772E1 /* RotaryDrawTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4A98C18F2FD47F6B008A49AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6BA7527EFF1CADC95053314A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -146,7 +229,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD31801BA440C5FAD278C460 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA63E441298212F43B4B207C /* EventStateTests.swift in Sources */,
+				3DEDF5F7075C77550C5F1B96 /* CodableCompatibilityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CF9270A45301C0999CAF838E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RotaryDraw;
+			target = 4A98C1902FD47F6B008A49AD /* RotaryDraw */;
+			targetProxy = 68B361696F301A6DDCD80BFE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4A98C19C2FD47F6D008A49AD /* Debug */ = {
@@ -288,8 +389,11 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -324,8 +428,11 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -345,9 +452,54 @@
 			};
 			name = Release;
 		};
+		65EB0C56E813BBE489098E43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7K3WL7G8T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDrawTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RotaryDraw.app/Contents/MacOS/RotaryDraw";
+			};
+			name = Debug;
+		};
+		DBC494308B327F0BF4A34738 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7K3WL7G8T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDrawTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RotaryDraw.app/Contents/MacOS/RotaryDraw";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		22A14B4649A39AE48174A0B2 /* Build configuration list for PBXNativeTarget "RotaryDrawTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBC494308B327F0BF4A34738 /* Release */,
+				65EB0C56E813BBE489098E43 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4A98C18C2FD47F6B008A49AD /* Build configuration list for PBXProject "RotaryDraw" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

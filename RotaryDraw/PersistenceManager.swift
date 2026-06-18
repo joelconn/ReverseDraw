@@ -12,9 +12,16 @@ final class PersistenceManager {
     private var guestListURL: URL { directory.appendingPathComponent("guestlist.json") }
     private var eventsDirectory: URL { directory.appendingPathComponent("Events") }
 
-    init() {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        directory = appSupport.appendingPathComponent("RotaryDraw")
+    /// `directoryOverride` exists so tests can point persistence at an isolated
+    /// temp directory instead of the real `~/Library/Application Support/RotaryDraw/`,
+    /// which could otherwise clobber real saved event data when tests run.
+    init(directoryOverride: URL? = nil) {
+        if let directoryOverride {
+            directory = directoryOverride
+        } else {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            directory = appSupport.appendingPathComponent("RotaryDraw")
+        }
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     }
 

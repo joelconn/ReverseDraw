@@ -45,6 +45,7 @@ final class EventState {
     var eventName: String = ""
 
     private(set) var undoStack: [Snapshot] = []
+    private let persistence: PersistenceManager
 
     // Captured right before startBonusDraw() resets all tickets, so the
     // final event archive can still report main-draw special prize winners
@@ -70,15 +71,16 @@ final class EventState {
     }
 
     var hasExistingSession: Bool {
-        PersistenceManager.shared.hasSession
+        persistence.hasSession
     }
 
     // MARK: - Init
 
-    init() {
+    init(persistence: PersistenceManager = .shared) {
+        self.persistence = persistence
         resetTickets()
-        guestList = PersistenceManager.shared.loadGuestList()
-        PersistenceManager.shared.startAutoBackup { [weak self] in
+        guestList = persistence.loadGuestList()
+        persistence.startAutoBackup { [weak self] in
             self?.makeSnapshot()
         }
     }
@@ -95,7 +97,7 @@ final class EventState {
     func loadGuestCSV(_ csvText: String) -> Int {
         let parsed = GuestInfo.parseCSV(csvText)
         guestList = parsed
-        PersistenceManager.shared.saveGuestList(parsed)
+        persistence.saveGuestList(parsed)
         return parsed.count
     }
 
@@ -253,7 +255,7 @@ final class EventState {
 
     @discardableResult
     func loadSession() -> Bool {
-        guard let snapshot = PersistenceManager.shared.load() else { return false }
+        guard let snapshot = persistence.load() else { return false }
         restore(from: snapshot)
         return true
     }
@@ -270,7 +272,7 @@ final class EventState {
         potSplitDone = false
         eventName = ""
         resetTickets()
-        PersistenceManager.shared.clear()
+        persistence.clear()
     }
 
     // MARK: - Private
@@ -319,7 +321,7 @@ final class EventState {
             finalTenWinners: archiveFinalTenWinners,
             grandPrizeWinner: grandWinner
         )
-        PersistenceManager.shared.saveEventArchive(archive)
+        persistence.saveEventArchive(archive)
     }
 
     private func pushSnapshot() {
@@ -358,7 +360,7 @@ final class EventState {
 
     private func autosave() {
         let snapshot = makeSnapshot()
-        PersistenceManager.shared.save(snapshot)
+        persistence.save(snapshot)
         lastSavedAt = Date()
     }
 }
