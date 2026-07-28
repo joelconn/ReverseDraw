@@ -60,7 +60,15 @@ final class ConfettiScene: SKScene {
     override func didMove(to view: SKView) {
         guard !launched else { return }
         launched = true
+
+        // Set scene size to match the view's bounds so particles spawn across full screen
+        if view.bounds.width > 0, view.bounds.height > 0 {
+            size = view.bounds.size
+        }
+
         backgroundColor = SKColor.clear
+        scaleMode = .resizeFill
+
         if loop {
             run(SKAction.repeatForever(SKAction.sequence([
                 SKAction.run { [weak self] in self?.launchConfetti() },
