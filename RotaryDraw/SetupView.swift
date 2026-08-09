@@ -53,6 +53,41 @@ struct SetupView: View {
                             .textFieldStyle(.roundedBorder)
                     }
 
+                    SettingsSection(title: "Prize Money Calculator") {
+                        SettingsRow(label: "Number of Tickets") {
+                            TextField("250", value: $state.config.numTickets, format: .number)
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 100)
+                        }
+                        SettingsRow(label: "Price Per Ticket") {
+                            TextField("$0", value: $state.config.pricePerTicket, format: .currency(code: "USD"))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 120)
+                        }
+                        Divider()
+                        SettingsRow(label: "Total Revenue") {
+                            Text(state.config.totalRevenue, format: .currency(code: "USD"))
+                                .fontWeight(.semibold)
+                                .frame(width: 120, alignment: .trailing)
+                        }
+                        SettingsRow(label: "Prize Pool (50%)") {
+                            Text(state.config.totalPrizePool, format: .currency(code: "USD"))
+                                .fontWeight(.bold)
+                                .foregroundStyle(.green)
+                                .frame(width: 120, alignment: .trailing)
+                        }
+                        SettingsRow(label: "Special Prizes") {
+                            Text(state.config.specialPrizesTotal, format: .currency(code: "USD"))
+                                .frame(width: 120, alignment: .trailing)
+                        }
+                        SettingsRow(label: "Remaining") {
+                            Text(state.config.remainingPrizes, format: .currency(code: "USD"))
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.blue)
+                                .frame(width: 120, alignment: .trailing)
+                        }
+                    }
+
                     SettingsSection(title: "Event Settings") {
                         SettingsRow(label: "Total Tickets") {
                             TextField("250", value: $state.config.totalTickets, format: .number)

@@ -2,6 +2,8 @@ import Foundation
 import Observation
 
 struct EventConfig: Codable {
+    var numTickets: Int = 250
+    var pricePerTicket: Double = 0.0
     var totalTickets: Int = 250
     var normalRevealDuration: Double = 5.0
     var winnerRevealDuration: Double = 12.0
@@ -10,12 +12,24 @@ struct EventConfig: Codable {
     var specialPrizes: [String: Double] = [:]
     var bonusDrawAmount: Double = 0.0
 
+    // Computed properties for prize money calculation
+    var totalRevenue: Double { Double(numTickets) * pricePerTicket }
+    var totalPrizePool: Double { totalRevenue * 0.5 }
+    var specialPrizesTotal: Double {
+        specialPrizes.values.reduce(0, +)
+    }
+    var remainingPrizes: Double {
+        max(0, totalPrizePool - specialPrizesTotal)
+    }
+
     init() {}
 
-    // Custom decode so old saved sessions missing newer fields (like bonusDrawAmount)
+    // Custom decode so old saved sessions missing newer fields
     // still load instead of throwing.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        numTickets = try c.decodeIfPresent(Int.self, forKey: .numTickets) ?? 250
+        pricePerTicket = try c.decodeIfPresent(Double.self, forKey: .pricePerTicket) ?? 0.0
         totalTickets = try c.decodeIfPresent(Int.self, forKey: .totalTickets) ?? 250
         normalRevealDuration = try c.decodeIfPresent(Double.self, forKey: .normalRevealDuration) ?? 5.0
         winnerRevealDuration = try c.decodeIfPresent(Double.self, forKey: .winnerRevealDuration) ?? 12.0
