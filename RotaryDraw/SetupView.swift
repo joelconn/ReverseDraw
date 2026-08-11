@@ -161,21 +161,9 @@ struct SetupView: View {
                                 TextField("Prize $", text: $newPrizeAmount)
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 110)
+                                    .onSubmit { addSpecialPrize() }
                                 Button("Add") {
-                                    if let num = Int(newDrawNumber),
-                                       num >= 1,
-                                       num <= state.config.totalTickets,
-                                       let amount = Double(
-                                           newPrizeAmount
-                                               .replacingOccurrences(of: "$", with: "")
-                                               .replacingOccurrences(of: ",", with: "")
-                                       ),
-                                       amount > 0 {
-                                        state.config.specialPrizes["\(num)"] = amount
-                                        newDrawNumber = ""
-                                        newPrizeAmount = ""
-                                        showAddRow = false
-                                    }
+                                    addSpecialPrize()
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .controlSize(.small)
@@ -271,6 +259,23 @@ struct SetupView: View {
             } else {
                 guestLoadResult = "⚠ Could not read file"
             }
+        }
+    }
+
+    private func addSpecialPrize() {
+        if let num = Int(newDrawNumber),
+           num >= 1,
+           num <= state.config.totalTickets,
+           let amount = Double(
+               newPrizeAmount
+                   .replacingOccurrences(of: "$", with: "")
+                   .replacingOccurrences(of: ",", with: "")
+           ),
+           amount > 0 {
+            state.config.specialPrizes["\(num)"] = amount
+            newDrawNumber = ""
+            newPrizeAmount = ""
+            showAddRow = false
         }
     }
 
