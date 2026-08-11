@@ -11,6 +11,7 @@ final class PersistenceManager {
     private var sessionURL: URL { directory.appendingPathComponent("session.json") }
     private var guestListURL: URL { directory.appendingPathComponent("guestlist.json") }
     private var eventsDirectory: URL { directory.appendingPathComponent("Events") }
+    private var setupsDirectory: URL { directory.appendingPathComponent("Setups") }
 
     /// `directoryOverride` exists so tests can point persistence at an isolated
     /// temp directory instead of the real `~/Library/Application Support/RotaryDraw/`,
@@ -100,6 +101,45 @@ final class PersistenceManager {
         autoBackupTimer?.invalidate()
         autoBackupTimer = nil
         snapshotProvider = nil
+    }
+
+    // MARK: - Setup Templates
+
+    func saveSetup(name: String, config: EventConfig) {
+        try? FileManager.default.createDirectory(at: setupsDirectory, withIntermediateDirectories: true)
+
+        let illegalCharacters = CharacterSet(charactersIn: "/\\:*?\"<>|")
+        let safeName = name
+            .components(separatedBy: illegalCharacters)
+            .joined(separator: "-")
+            .trimmingCharacters(in: .whitespaces)
+
+        let url = setupsDirectory.appendingPathComponent("\(safeName).json")
+        guard let data = try? JSONEncoder().encode(config) else { return }
+        try? data.write(to: url, options: .atomic)
+    }
+
+    func loadSetup(name: String) -> EventConfig? {
+        let url = setupsDirectory.appendingPathComponent("\(name).json")
+        guard let data = try? Data(contentsOf: url),
+              let config = try? JSONDecoder().decode(EventConfig.self, from: data)
+        else { return nil }
+        return config
+    }
+
+    func listSetups() -> [String] {
+        guard let files = try? FileManager.default.contentsOfDirectory(at: setupsDirectory, includingPropertiesForKeys: nil) else {
+            return []
+        }
+        return files
+            .filter { $0.pathExtension == "json" }
+            .map { $0.deletingPathExtension().lastPathComponent }
+            .sorted()
+    }
+
+    func deleteSetup(name: String) {
+        let url = setupsDirectory.appendingPathComponent("\(name).json")
+        try? FileManager.default.removeItem(at: url)
     }
 
     // MARK: - Private

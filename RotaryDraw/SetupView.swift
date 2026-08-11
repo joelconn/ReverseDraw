@@ -9,6 +9,8 @@ struct SetupView: View {
     @State private var showAddRow = false
     @State private var guestLoadResult: String? = nil
     @State private var showFilePicker = false
+    @State private var templateName: String = ""
+    @State private var savedSetups: [String] = []
 
     var sortedSpecialPrizes: [(key: String, value: Double)] {
         state.config.specialPrizes
@@ -199,6 +201,53 @@ struct SetupView: View {
                         }
                     }
 
+                    SettingsSection(title: "Setup Templates") {
+                        HStack(spacing: 8) {
+                            TextField("Template name", text: $templateName)
+                                .textFieldStyle(.roundedBorder)
+                            Button("Save") {
+                                if !templateName.trimmingCharacters(in: .whitespaces).isEmpty {
+                                    PersistenceManager.shared.saveSetup(name: templateName, config: state.config)
+                                    savedSetups = PersistenceManager.shared.listSetups()
+                                    templateName = ""
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.small)
+                        }
+
+                        if !savedSetups.isEmpty {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Saved Templates")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                ForEach(savedSetups, id: \.self) { setup in
+                                    HStack {
+                                        Button(setup) {
+                                            if let config = PersistenceManager.shared.loadSetup(name: setup) {
+                                                state.config = config
+                                            }
+                                        }
+                                        .buttonStyle(.plain)
+                                        .foregroundStyle(.blue)
+
+                                        Spacer()
+
+                                        Button {
+                                            PersistenceManager.shared.deleteSetup(name: setup)
+                                            savedSetups = PersistenceManager.shared.listSetups()
+                                        } label: {
+                                            Image(systemName: "trash.fill")
+                                                .foregroundStyle(.red)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                    .padding(.vertical, 4)
+                                }
+                            }
+                        }
+                    }
+
                     SettingsSection(title: "Guest List (optional)") {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -239,6 +288,9 @@ struct SetupView: View {
                 Spacer(minLength: 24)
             }
             .frame(maxWidth: .infinity)
+        }
+        .onAppear {
+            savedSetups = PersistenceManager.shared.listSetups()
         }
         #if os(macOS)
         .frame(minWidth: 600, minHeight: 520)
