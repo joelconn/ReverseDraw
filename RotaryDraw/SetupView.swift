@@ -189,13 +189,26 @@ struct SetupView: View {
                             }
                         }
 
-                        Button {
-                            showAddRow = true
-                        } label: {
-                            Label("Add Special Prize Draw", systemImage: "plus.circle")
+                        HStack(spacing: 8) {
+                            Button {
+                                showAddRow = true
+                            } label: {
+                                Label("Add Prize Draw", systemImage: "plus.circle")
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(.blue)
+
+                            Spacer()
+
+                            Button {
+                                applySummerSizzleTemplate()
+                            } label: {
+                                Label("Summer Sizzle", systemImage: "star.fill")
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                            .foregroundStyle(.orange)
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
                     }
 
                     SettingsSection(title: "Guest List (optional)") {
@@ -259,6 +272,25 @@ struct SetupView: View {
                 guestLoadResult = "⚠ Could not read file"
             }
         }
+    }
+
+    private func applySummerSizzleTemplate() {
+        state.config.specialPrizes = [
+            "1": 500,
+            "20": 250,
+            "40": 250,
+            "60": 250,
+            "80": 250,
+            "100": 500,
+            "120": 250,
+            "140": 250,
+            "160": 250,
+            "180": 250,
+            "200": 500,
+            "220": 250,
+            "240": 250
+        ]
+        state.config.bonusDrawAmount = 2000
     }
 }
 
