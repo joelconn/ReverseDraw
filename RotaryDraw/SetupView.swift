@@ -89,25 +89,22 @@ struct SetupView: View {
                     }
 
                     SettingsSection(title: "Event Settings") {
-                        SettingsRow(label: "Total Tickets") {
-                            TextField("250", value: $state.config.totalTickets, format: .number)
-                                .textFieldStyle(.roundedBorder)
-                                .frame(width: 80)
-                        }
                         SettingsRow(label: "Final Ten After Draw #") {
-                            TextField("240", value: $state.config.threshold, format: .number)
-                                .textFieldStyle(.roundedBorder)
-                                .frame(width: 80)
+                            Text("\(state.config.finalTenThreshold)")
+                                .fontWeight(.semibold)
+                                .frame(width: 120, alignment: .trailing)
                         }
-                        SettingsRow(label: "Final Ten Pot") {
-                            TextField("$0", value: $state.config.finalTenPot, format: .currency(code: "USD"))
-                                .textFieldStyle(.roundedBorder)
-                                .frame(width: 120)
-                        }
+                        Divider()
                         SettingsRow(label: "Bonus Draw Amount") {
                             TextField("$0", value: $state.config.bonusDrawAmount, format: .currency(code: "USD"))
                                 .textFieldStyle(.roundedBorder)
                                 .frame(width: 120)
+                        }
+                        SettingsRow(label: "Final Ten Pot") {
+                            Text(state.config.finalTenPot, format: .currency(code: "USD"))
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.blue)
+                                .frame(width: 120, alignment: .trailing)
                         }
                     }
 

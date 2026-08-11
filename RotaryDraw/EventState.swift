@@ -4,10 +4,8 @@ import Observation
 struct EventConfig: Codable {
     var numTickets: Int = 250
     var pricePerTicket: Double = 0.0
-    var totalTickets: Int = 250
     var normalRevealDuration: Double = 5.0
     var winnerRevealDuration: Double = 12.0
-    var finalTenPot: Double = 0.0
     var threshold: Int = 240
     var specialPrizes: [String: Double] = [:]
     var bonusDrawAmount: Double = 0.0
@@ -18,23 +16,27 @@ struct EventConfig: Codable {
     var specialPrizesTotal: Double {
         specialPrizes.values.reduce(0, +)
     }
+    var totalTickets: Int { numTickets }
+    var finalTenThreshold: Int { max(1, numTickets - 10) }
     var remainingPrizes: Double {
         max(0, totalPrizePool - specialPrizesTotal)
+    }
+    var finalTenPot: Double {
+        max(0, totalPrizePool - specialPrizesTotal - bonusDrawAmount)
     }
 
     init() {}
 
-    // Custom decode so old saved sessions missing newer fields
-    // still load instead of throwing.
+    // Custom decode so old saved sessions missing newer fields still load.
+    // Note: totalTickets, threshold, finalTenPot are now computed from numTickets,
+    // bonusDrawAmount, and specialPrizes, so old persisted values are ignored.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         numTickets = try c.decodeIfPresent(Int.self, forKey: .numTickets) ?? 250
         pricePerTicket = try c.decodeIfPresent(Double.self, forKey: .pricePerTicket) ?? 0.0
-        totalTickets = try c.decodeIfPresent(Int.self, forKey: .totalTickets) ?? 250
         normalRevealDuration = try c.decodeIfPresent(Double.self, forKey: .normalRevealDuration) ?? 5.0
         winnerRevealDuration = try c.decodeIfPresent(Double.self, forKey: .winnerRevealDuration) ?? 12.0
-        finalTenPot = try c.decodeIfPresent(Double.self, forKey: .finalTenPot) ?? 0.0
-        threshold = try c.decodeIfPresent(Int.self, forKey: .threshold) ?? 240
+        threshold = try c.decodeIfPresent(Int.self, forKey: .threshold) ?? (numTickets - 10)
         specialPrizes = try c.decodeIfPresent([String: Double].self, forKey: .specialPrizes) ?? [:]
         bonusDrawAmount = try c.decodeIfPresent(Double.self, forKey: .bonusDrawAmount) ?? 0.0
     }
@@ -128,12 +130,10 @@ final class EventState {
         bonusDrawAmount: Double
     ) {
         self.eventName = eventName
-        config.totalTickets = totalTickets
+        config.numTickets = totalTickets
         config.specialPrizes = prizes
         config.normalRevealDuration = normalDuration
         config.winnerRevealDuration = winnerDuration
-        config.finalTenPot = finalTenPot
-        config.threshold = threshold
         config.bonusDrawAmount = bonusDrawAmount
         resetTickets()
         phase = .drawing
