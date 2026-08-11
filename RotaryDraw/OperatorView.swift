@@ -2,6 +2,8 @@ import SwiftUI
 
 struct OperatorView: View {
     @Environment(EventState.self) private var state
+    @Environment(WindowManager.self) private var windowManager
+    @State private var showSettings = false
 
     var drawCount: Int { state.drawHistory.count }
     var threshold: Int { state.config.threshold }
@@ -44,6 +46,18 @@ struct OperatorView: View {
         HStack {
             phaseBadge
 
+            #if os(macOS)
+            if windowManager.audienceWindow == nil {
+                Button(action: { windowManager.openAudienceWindow(eventState: state) }) {
+                    Image(systemName: "rectangle.righthalf.inset.fill")
+                        .font(.subheadline)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .help("Reopen Audience Window")
+            }
+            #endif
+
             Spacer()
 
             if state.phase == .drawing {
@@ -82,6 +96,8 @@ struct OperatorView: View {
     private var controlColumn: some View {
         ScrollView {
             VStack(spacing: 16) {
+                settingsButton
+
                 if state.phase == .drawing {
                     drawSection
                 }
@@ -104,6 +120,118 @@ struct OperatorView: View {
         }
     }
 
+    private var settingsButton: some View {
+        VStack(spacing: 0) {
+            Button(action: { showSettings.toggle() }) {
+                HStack {
+                    Image(systemName: "gear")
+                    Text(showSettings ? "Hide Settings" : "Settings")
+                    Spacer()
+                    Image(systemName: showSettings ? "chevron.up" : "chevron.down")
+                }
+                .font(.subheadline.bold())
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .foregroundStyle(.primary)
+            }
+            .buttonStyle(.bordered)
+
+            if showSettings {
+                settingsPanel
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var settingsPanel: some View {
+        VStack(spacing: 12) {
+            Divider()
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Reveal Durations (seconds)")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    Text("Normal")
+                        .font(.caption)
+                    Spacer()
+                    TextField("5", value: Binding(
+                        get: { state.config.normalRevealDuration },
+                        set: { state.config.normalRevealDuration = $0 }
+                    ), format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 60)
+                }
+
+                HStack {
+                    Text("Winner")
+                        .font(.caption)
+                    Spacer()
+                    TextField("12", value: Binding(
+                        get: { state.config.winnerRevealDuration },
+                        set: { state.config.winnerRevealDuration = $0 }
+                    ), format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 60)
+                }
+            }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Prize Amounts")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    Text("Bonus Draw")
+                        .font(.caption)
+                    Spacer()
+                    TextField("$0", value: Binding(
+                        get: { state.config.bonusDrawAmount },
+                        set: { state.config.bonusDrawAmount = $0 }
+                    ), format: .currency(code: "USD"))
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 90)
+                }
+            }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Special Draw Amounts")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                if state.config.specialPrizes.isEmpty {
+                    Text("No special prizes configured")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    let sortedPrizes = state.config.specialPrizes
+                        .sorted { (Int($0.key) ?? 0) < (Int($1.key) ?? 0) }
+
+                    ForEach(sortedPrizes, id: \.key) { key, amount in
+                        HStack {
+                            Text("Draw #\(key)")
+                                .font(.caption)
+                            Spacer()
+                            TextField("$0", value: Binding(
+                                get: { amount },
+                                set: { state.config.specialPrizes[key] = $0 }
+                            ), format: .currency(code: "USD"))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 90)
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
+        }
+    }
+
     // MARK: - Drawing Controls
 
     private var drawSection: some View {
@@ -111,17 +239,13 @@ struct OperatorView: View {
             Button {
                 state.drawNextTicket()
             } label: {
-                Label(
-                    state.currentReveal != nil ? "Drawing..." : "Draw Next Ticket",
-                    systemImage: "ticket.fill"
-                )
-                .font(.title3.bold())
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 4)
+                Label("Draw Next Ticket", systemImage: "ticket.fill")
+                    .font(.title3.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
-            .disabled(state.currentReveal != nil)
             .keyboardShortcut(.space, modifiers: [])
 
             Button {
@@ -135,7 +259,7 @@ struct OperatorView: View {
             .buttonStyle(.borderedProminent)
             .tint(.red)
             .controlSize(.large)
-            .disabled(state.currentReveal == nil)
+            .disabled(state.lastRevealedTicketID == nil)
 
             if let carryover = state.carryoverPrize {
                 HStack(spacing: 6) {
@@ -200,18 +324,15 @@ struct OperatorView: View {
                 Button {
                     state.drawElimination()
                 } label: {
-                    Label(
-                        state.currentReveal != nil ? "Drawing..." : "Draw Elimination",
-                        systemImage: "ticket.fill"
-                    )
-                    .font(.title3.bold())
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 4)
+                    Label("Draw Elimination", systemImage: "ticket.fill")
+                        .font(.title3.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
                 .controlSize(.large)
-                .disabled(state.currentReveal != nil || state.finalTenContestants.count <= 1)
+                .disabled(state.finalTenContestants.count <= 1)
                 .keyboardShortcut(.space, modifiers: [])
 
                 Button {
@@ -226,6 +347,20 @@ struct OperatorView: View {
                 .tint(.yellow)
                 .controlSize(.large)
                 .disabled(state.currentReveal != nil || state.finalTenContestants.isEmpty)
+
+                Button { state.undo() } label: {
+                    HStack {
+                        Image(systemName: "arrow.uturn.backward")
+                        Text("Undo")
+                        if state.undoStack.count > 0 {
+                            Text("(\(state.undoStack.count))").foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!state.canUndo)
+                .keyboardShortcut("z", modifiers: .command)
 
                 Divider()
             }
@@ -267,20 +402,6 @@ struct OperatorView: View {
             .tint(.orange)
             .frame(maxWidth: .infinity)
             .disabled(!state.potSplitDone)
-
-            Button { state.undo() } label: {
-                HStack {
-                    Image(systemName: "arrow.uturn.backward")
-                    Text("Undo")
-                    if state.undoStack.count > 0 {
-                        Text("(\(state.undoStack.count))").foregroundStyle(.secondary)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            .disabled(!state.canUndo)
-            .keyboardShortcut("z", modifiers: .command)
         }
     }
 

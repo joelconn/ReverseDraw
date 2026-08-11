@@ -10,7 +10,7 @@ struct RevealOverlay: View {
         if let ticket = state.revealTicket {
             let guest = state.guest(for: ticket.id)
             let isGrandWinner = state.phase == .complete
-            let isElimination = state.phase == .finalTen
+            let isElimination = state.currentRevealIsElimination
             let isCelebration = ticket.isSpecialPrize || isGrandWinner
 
             ZStack {
@@ -18,7 +18,7 @@ struct RevealOverlay: View {
                     .ignoresSafeArea()
 
                 VStack(spacing: 20) {
-                    Text(isGrandWinner ? "GRAND PRIZE WINNER" : (isElimination ? "ELIMINATED" : (ticket.isSpecialPrize ? "SPECIAL PRIZE" : "TICKET NUMBER")))
+                    Text(isGrandWinner ? "WINNER" : (isElimination ? "ELIMINATED" : (ticket.isSpecialPrize ? "SPECIAL PRIZE" : "TICKET NUMBER")))
                         .font(.system(size: 28, weight: .black, design: .rounded))
                         .foregroundStyle(isCelebration ? Color.yellow : (isElimination ? Color.red : Color.secondary))
                         .tracking(4)
@@ -54,13 +54,23 @@ struct RevealOverlay: View {
                         GuestNameplate(guest: guest)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
+
+                    Spacer()
+
+                    if let drawPosition = ticket.drawOrder {
+                        Text("Draw \(drawPosition)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 .padding(.horizontal, 60)
+                .padding(.vertical, 40)
                 .scaleEffect(scale)
                 .opacity(opacity)
 
                 if showConfetti {
                     ConfettiView(intensity: .dramatic)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .ignoresSafeArea()
                         .allowsHitTesting(false)
                 }

@@ -50,6 +50,7 @@ final class EventState {
     var tickets: [Ticket] = []
     var drawHistory: [Int] = []
     var currentReveal: Int? = nil
+    var lastRevealedTicketID: Int? = nil
     var phase: EventPhase = .setup
     var finalTenContestants: [Int] = []
     var eliminated: [Int] = []
@@ -84,6 +85,11 @@ final class EventState {
     var revealTicket: Ticket? {
         guard let id = currentReveal else { return nil }
         return tickets.first { $0.id == id }
+    }
+
+    var currentRevealIsElimination: Bool {
+        guard let id = currentReveal else { return false }
+        return eliminated.contains(id)
     }
 
     var hasExistingSession: Bool {
@@ -150,7 +156,7 @@ final class EventState {
     // MARK: - Actions
 
     func drawNextTicket() {
-        guard phase == .drawing, currentReveal == nil else { return }
+        guard phase == .drawing else { return }
         pushSnapshot()
 
         let undrawn = tickets.filter { !$0.isDrawn }
@@ -171,6 +177,7 @@ final class EventState {
         }
         drawHistory.append(ticket.id)
         currentReveal = ticket.id
+        lastRevealedTicketID = ticket.id
 
         if drawHistory.count >= config.threshold {
             phase = .finalTen
@@ -186,7 +193,8 @@ final class EventState {
     }
 
     func markNotPresent() {
-        guard let revealID = currentReveal else { return }
+        let revealID = currentReveal ?? lastRevealedTicketID
+        guard let revealID else { return }
         pushSnapshot()
         if let i = tickets.firstIndex(where: { $0.id == revealID }) {
             if tickets[i].isSpecialPrize {
@@ -197,17 +205,19 @@ final class EventState {
             tickets[i].wasNotPresent = true
         }
         currentReveal = nil
+        lastRevealedTicketID = nil
         autosave()
     }
 
     func drawElimination() {
-        guard phase == .finalTen, currentReveal == nil, !potSplitDone,
+        guard phase == .finalTen, !potSplitDone,
               finalTenContestants.count > 1,
               let ticketID = finalTenContestants.randomElement() else { return }
         pushSnapshot()
         finalTenContestants.removeAll { $0 == ticketID }
         eliminated.append(ticketID)
         currentReveal = ticketID
+        lastRevealedTicketID = ticketID
         autosave()
     }
 
@@ -267,6 +277,31 @@ final class EventState {
         )
     }
 
+    func recoverFromDrawnTickets(drawnIDs: [Int]) {
+        guard !drawnIDs.isEmpty else { return }
+        startEvent()
+        for ticketID in drawnIDs {
+            guard ticketID > 0, ticketID <= config.totalTickets else { continue }
+            if let i = tickets.firstIndex(where: { $0.id == ticketID }) {
+                let drawPosition = drawHistory.count + 1
+                tickets[i].isDrawn = true
+                tickets[i].drawOrder = drawPosition
+                if let prize = config.specialPrizes["\(drawPosition)"] {
+                    tickets[i].isSpecialPrize = true
+                    tickets[i].prizeAmount = prize
+                }
+                drawHistory.append(ticketID)
+            }
+        }
+        currentReveal = nil
+        lastRevealedTicketID = nil
+        if drawHistory.count >= config.threshold {
+            phase = .finalTen
+            finalTenContestants = tickets.filter { !$0.isDrawn }.map { $0.id }.sorted()
+        }
+        autosave()
+    }
+
     @discardableResult
     func loadSession() -> Bool {
         guard let snapshot = persistence.load() else { return false }
@@ -277,6 +312,7 @@ final class EventState {
     func reset() {
         drawHistory = []
         currentReveal = nil
+        lastRevealedTicketID = nil
         phase = .setup
         finalTenContestants = []
         eliminated = []

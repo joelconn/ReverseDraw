@@ -8,7 +8,7 @@ struct ConfettiView: NSViewRepresentable {
     enum Intensity { case normal, dramatic }
 
     func makeNSView(context: Context) -> SKView {
-        let skView = SKView(frame: .zero)
+        let skView = SKView()
         skView.allowsTransparency = true
         skView.wantsLayer = true
         skView.layer?.backgroundColor = .clear
@@ -33,7 +33,7 @@ struct ConfettiView: UIViewRepresentable {
     enum Intensity { case normal, dramatic }
 
     func makeUIView(context: Context) -> SKView {
-        let skView = SKView(frame: .zero)
+        let skView = SKView()
         skView.isOpaque = false
         skView.backgroundColor = .clear
         skView.ignoresSiblingOrder = true

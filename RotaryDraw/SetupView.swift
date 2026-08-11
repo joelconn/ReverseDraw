@@ -11,6 +11,8 @@ struct SetupView: View {
     @State private var showFilePicker = false
     @State private var templateName: String = ""
     @State private var savedSetups: [String] = []
+    @State private var recoveryTickets: String = ""
+    @State private var showUpdates = false
 
     var sortedSpecialPrizes: [(key: String, value: Double)] {
         state.config.specialPrizes
@@ -50,6 +52,24 @@ struct SetupView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 24) {
+                    SettingsSection(title: "Manual Recovery (Optional)") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Paste drawn ticket numbers (comma or space separated)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            TextEditor(text: $recoveryTickets)
+                                .font(.system(.body, design: .monospaced))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(height: 80)
+                            Button("Recover from Tickets") {
+                                state.recoverFromDrawnTickets(drawnIDs: parseRecoveryTickets())
+                                recoveryTickets = ""
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                        }
+                    }
+
                     SettingsSection(title: "Event Name") {
                         TextField("e.g. Spring Gala 2026", text: $state.eventName)
                             .textFieldStyle(.roundedBorder)
@@ -155,6 +175,19 @@ struct SetupView: View {
                             .padding(.vertical, 2)
                         }
 
+                        if !sortedSpecialPrizes.isEmpty {
+                            Divider()
+                            HStack {
+                                Text("Total")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Text(state.config.specialPrizesTotal, format: .currency(code: "USD"))
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.blue)
+                            }
+                            .padding(.vertical, 4)
+                        }
+
                         if showAddRow {
                             HStack(spacing: 8) {
                                 TextField("Draw #", text: $newDrawNumber)
@@ -251,7 +284,7 @@ struct SetupView: View {
                     SettingsSection(title: "Guest List (optional)") {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("CSV format: TicketNumber, Name, SponsorLevel")
+                                Text("CSV format: Paddle #, First name, Last name [, Sponsor Level]")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                 if let result = guestLoadResult {
@@ -281,9 +314,17 @@ struct SetupView: View {
                     .fontWeight(.semibold)
                     .disabled(state.eventName.trimmingCharacters(in: .whitespaces).isEmpty)
 
-                Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                HStack(spacing: 12) {
+                    Button("Updates") { showUpdates = true }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+
+                    Spacer()
+
+                    Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
 
                 Spacer(minLength: 24)
             }
@@ -291,6 +332,9 @@ struct SetupView: View {
         }
         .onAppear {
             savedSetups = PersistenceManager.shared.listSetups()
+        }
+        .sheet(isPresented: $showUpdates) {
+            UpdatesView()
         }
         #if os(macOS)
         .frame(minWidth: 600, minHeight: 520)
@@ -348,6 +392,12 @@ struct SetupView: View {
             "240": 250
         ]
         state.config.bonusDrawAmount = 2000
+    }
+
+    private func parseRecoveryTickets() -> [Int] {
+        recoveryTickets
+            .split { !$0.isNumber && $0 != "-" }
+            .compactMap { Int($0) }
     }
 }
 

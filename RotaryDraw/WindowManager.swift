@@ -1,8 +1,10 @@
 #if os(macOS)
 import SwiftUI
 import AppKit
+import Observation
 
 @MainActor
+@Observable
 final class WindowManager {
     private(set) var audienceWindow: NSWindow?
 

@@ -14,11 +14,23 @@ struct RotaryDrawApp: App {
         Window("RotaryDraw — Operator", id: "operator") {
             ContentView()
                 .environment(eventState)
+                .environment(windowManager)
                 .onAppear {
                     windowManager.openAudienceWindow(eventState: eventState)
                 }
         }
         .defaultSize(width: 900, height: 680)
+        .commandsRemoved()
+        .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About RotaryDraw") { NSApp.orderFrontStandardAboutPanel(nil) }
+            }
+            CommandGroup(after: .windowArrangement) {
+                Divider()
+                Button("Show Audience Window") { windowManager.openAudienceWindow(eventState: eventState) }
+                    .keyboardShortcut("2", modifiers: .command)
+            }
+        }
         #else
         WindowGroup {
             iPadRootView()
