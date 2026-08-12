@@ -9,6 +9,7 @@ struct EventConfig: Codable {
     var threshold: Int = 240
     var specialPrizes: [String: Double] = [:]
     var bonusDrawAmount: Double = 0.0
+    var unusedTickets: Set<Int> = []
 
     // Computed properties for prize money calculation
     var totalRevenue: Double { Double(numTickets) * pricePerTicket }
@@ -27,18 +28,50 @@ struct EventConfig: Codable {
 
     init() {}
 
+    enum CodingKeys: String, CodingKey {
+        case numTickets
+        case totalTickets // old field for backward compatibility
+        case pricePerTicket
+        case normalRevealDuration
+        case winnerRevealDuration
+        case threshold
+        case specialPrizes
+        case bonusDrawAmount
+        case finalTenPot // old field for backward compatibility
+        case unusedTickets
+    }
+
     // Custom decode so old saved sessions missing newer fields still load.
-    // Note: totalTickets, threshold, finalTenPot are now computed from numTickets,
-    // bonusDrawAmount, and specialPrizes, so old persisted values are ignored.
+    // Handles backward compatibility: old JSON had totalTickets, finalTenPot as persisted fields.
+    // Now they're computed, but we reconstruct pricePerTicket from old finalTenPot if needed.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        numTickets = try c.decodeIfPresent(Int.self, forKey: .numTickets) ?? 250
+        numTickets = try c.decodeIfPresent(Int.self, forKey: .numTickets)
+            ?? (try c.decodeIfPresent(Int.self, forKey: .totalTickets) ?? 250)
         pricePerTicket = try c.decodeIfPresent(Double.self, forKey: .pricePerTicket) ?? 0.0
         normalRevealDuration = try c.decodeIfPresent(Double.self, forKey: .normalRevealDuration) ?? 5.0
         winnerRevealDuration = try c.decodeIfPresent(Double.self, forKey: .winnerRevealDuration) ?? 12.0
         threshold = try c.decodeIfPresent(Int.self, forKey: .threshold) ?? (numTickets - 10)
         specialPrizes = try c.decodeIfPresent([String: Double].self, forKey: .specialPrizes) ?? [:]
         bonusDrawAmount = try c.decodeIfPresent(Double.self, forKey: .bonusDrawAmount) ?? 0.0
+
+        // If old JSON has finalTenPot but no pricePerTicket, reconstruct it
+        if pricePerTicket == 0.0, let oldFinalTenPot = try c.decodeIfPresent(Double.self, forKey: .finalTenPot) {
+            let specialPrizesTotal = specialPrizes.values.reduce(0, +)
+            pricePerTicket = (oldFinalTenPot + specialPrizesTotal + bonusDrawAmount) * 2.0 / Double(numTickets)
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(numTickets, forKey: .numTickets)
+        try c.encode(pricePerTicket, forKey: .pricePerTicket)
+        try c.encode(normalRevealDuration, forKey: .normalRevealDuration)
+        try c.encode(winnerRevealDuration, forKey: .winnerRevealDuration)
+        try c.encode(threshold, forKey: .threshold)
+        try c.encode(specialPrizes, forKey: .specialPrizes)
+        try c.encode(bonusDrawAmount, forKey: .bonusDrawAmount)
+        try c.encode(unusedTickets, forKey: .unusedTickets)
     }
 }
 
@@ -156,10 +189,10 @@ final class EventState {
     // MARK: - Actions
 
     func drawNextTicket() {
-        guard phase == .drawing else { return }
+        guard phase == .drawing, currentReveal == nil else { return }
         pushSnapshot()
 
-        let undrawn = tickets.filter { !$0.isDrawn }
+        let undrawn = tickets.filter { !$0.isDrawn && !$0.isUnused }
         guard let ticket = undrawn.randomElement() else { return }
 
         let drawPosition = drawHistory.count + 1
@@ -245,7 +278,7 @@ final class EventState {
     func drawBonusTicket() {
         guard phase == .bonusDraw else { return }
         pushSnapshot()
-        let undrawn = tickets.filter { !$0.isDrawn }
+        let undrawn = tickets.filter { !$0.isDrawn && !$0.isUnused }
         guard let ticket = undrawn.randomElement() else { return }
         if let i = tickets.firstIndex(where: { $0.id == ticket.id }) {
             tickets[i].isDrawn = true
@@ -328,7 +361,9 @@ final class EventState {
     // MARK: - Private
 
     private func resetTickets() {
-        tickets = (1...max(config.totalTickets, 1)).map { Ticket(id: $0) }
+        tickets = (1...max(config.totalTickets, 1)).map { id in
+            Ticket(id: id, isUnused: config.unusedTickets.contains(id))
+        }
     }
 
     /// Snapshots draw order, main-draw special prize winners, and Final Ten

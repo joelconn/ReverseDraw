@@ -12,6 +12,7 @@ struct SetupView: View {
     @State private var templateName: String = ""
     @State private var savedSetups: [String] = []
     @State private var recoveryTickets: String = ""
+    @State private var unusedTickets: String = ""
     @State private var showUpdates = false
 
     var sortedSpecialPrizes: [(key: String, value: Double)] {
@@ -73,6 +74,29 @@ struct SetupView: View {
                     SettingsSection(title: "Event Name") {
                         TextField("e.g. Spring Gala 2026", text: $state.eventName)
                             .textFieldStyle(.roundedBorder)
+                    }
+
+                    SettingsSection(title: "Unused Tickets (Optional)") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Comma or space separated ticket numbers")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            TextEditor(text: $unusedTickets)
+                                .font(.system(.body, design: .monospaced))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(height: 60)
+                            if !state.config.unusedTickets.isEmpty {
+                                Text("Unused: \(state.config.unusedTickets.sorted().map(String.init).joined(separator: ", "))")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
+                            Button("Set Unused Tickets") {
+                                updateUnusedTickets()
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                        }
                     }
 
                     SettingsSection(title: "Prize Money Calculator") {
@@ -398,6 +422,14 @@ struct SetupView: View {
         recoveryTickets
             .split { !$0.isNumber && $0 != "-" }
             .compactMap { Int($0) }
+    }
+
+    private func updateUnusedTickets() {
+        let parsed = Set(unusedTickets
+            .split { !$0.isNumber && $0 != "-" }
+            .compactMap { Int($0) }
+            .filter { $0 > 0 && $0 <= state.config.totalTickets })
+        state.config.unusedTickets = parsed
     }
 }
 

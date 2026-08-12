@@ -7,4 +7,5 @@ struct Ticket: Codable, Identifiable, Equatable {
     var prizeAmount: Double = 0
     var drawOrder: Int? = nil
     var wasNotPresent: Bool = false
+    var isUnused: Bool = false
 }

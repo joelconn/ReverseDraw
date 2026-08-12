@@ -17,10 +17,16 @@ struct EventStateTests {
         let persistence = PersistenceManager(directoryOverride: tempDir)
         let state = EventState(persistence: persistence)
         state.eventName = "Test Event"
-        state.config.totalTickets = totalTickets
+        state.config.numTickets = totalTickets
         state.config.threshold = threshold
-        state.config.finalTenPot = finalTenPot
         state.config.bonusDrawAmount = bonusDrawAmount
+        // Set pricePerTicket so totalPrizePool results in the desired finalTenPot
+        // finalTenPot = totalPrizePool - specialPrizesTotal - bonusDrawAmount
+        // Assuming no special prizes: finalTenPot = totalPrizePool - bonusDrawAmount
+        // totalPrizePool = totalRevenue * 0.5 = numTickets * pricePerTicket * 0.5
+        // So: pricePerTicket = (finalTenPot + bonusDrawAmount) * 2 / numTickets
+        let pricePerTicket = (finalTenPot + bonusDrawAmount) * 2.0 / Double(totalTickets)
+        state.config.pricePerTicket = pricePerTicket
         state.startEvent()
         return state
     }
@@ -159,10 +165,16 @@ struct EventStateTests {
         let persistence = PersistenceManager(directoryOverride: tempDir)
         let state = EventState(persistence: persistence)
         state.eventName = "Archive Test"
-        state.config.totalTickets = 10
+        state.config.numTickets = 10
         state.config.threshold = 9
-        state.config.finalTenPot = 100
         state.config.bonusDrawAmount = 500
+        // Set pricePerTicket so finalTenPot results in 100
+        // finalTenPot = totalPrizePool - specialPrizesTotal - bonusDrawAmount
+        // Assuming no special prizes: finalTenPot = totalPrizePool - bonusDrawAmount
+        // totalPrizePool = totalRevenue * 0.5 = numTickets * pricePerTicket * 0.5
+        // So: pricePerTicket = (finalTenPot + bonusDrawAmount) * 2 / numTickets
+        let pricePerTicket = (100 + 500) * 2.0 / 10.0
+        state.config.pricePerTicket = pricePerTicket
         state.startEvent()
 
         for _ in 0..<9 {

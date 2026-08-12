@@ -237,6 +237,7 @@ struct TicketCell: View {
     }
 
     private var background: Color {
+        if ticket.isUnused { return Color.white.opacity(0.02) }
         if isCurrentReveal { return .yellow }
         if ticket.isSpecialPrize && !ticket.isDrawn { return Color(red: 0.3, green: 0.22, blue: 0.0) }
         if ticket.isDrawn { return Color.white.opacity(0.04) }
@@ -244,6 +245,7 @@ struct TicketCell: View {
     }
 
     private var foreground: Color {
+        if ticket.isUnused { return Color.white.opacity(0.1) }
         if isCurrentReveal { return .black }
         if ticket.isDrawn { return Color.white.opacity(0.2) }
         if ticket.isSpecialPrize { return Color.yellow.opacity(0.9) }
@@ -251,6 +253,7 @@ struct TicketCell: View {
     }
 
     private var border: Color {
+        if ticket.isUnused { return Color.white.opacity(0.04) }
         if isCurrentReveal { return .orange }
         if ticket.isSpecialPrize && !ticket.isDrawn { return Color.yellow.opacity(0.5) }
         if ticket.isDrawn { return Color.white.opacity(0.08) }
