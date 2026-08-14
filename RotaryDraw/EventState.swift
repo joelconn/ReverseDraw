@@ -192,7 +192,7 @@ final class EventState {
         guard phase == .drawing, currentReveal == nil else { return }
         pushSnapshot()
 
-        let undrawn = tickets.filter { !$0.isDrawn && !$0.isUnused }
+        let undrawn = tickets.filter { !$0.isDrawn }
         guard let ticket = undrawn.randomElement() else { return }
 
         let drawPosition = drawHistory.count + 1
@@ -214,7 +214,7 @@ final class EventState {
 
         if drawHistory.count >= config.threshold {
             phase = .finalTen
-            finalTenContestants = tickets.filter { !$0.isDrawn && !$0.isUnused }.map { $0.id }.sorted()
+            finalTenContestants = tickets.filter { !$0.isDrawn }.map { $0.id }.sorted()
         }
 
         autosave()
@@ -278,7 +278,7 @@ final class EventState {
     func drawBonusTicket() {
         guard phase == .bonusDraw else { return }
         pushSnapshot()
-        let undrawn = tickets.filter { !$0.isDrawn && !$0.isUnused }
+        let undrawn = tickets.filter { !$0.isDrawn }
         guard let ticket = undrawn.randomElement() else { return }
         if let i = tickets.firstIndex(where: { $0.id == ticket.id }) {
             tickets[i].isDrawn = true
@@ -334,7 +334,7 @@ final class EventState {
         lastRevealedTicketID = nil
         if drawHistory.count >= config.threshold {
             phase = .finalTen
-            finalTenContestants = tickets.filter { !$0.isDrawn && !$0.isUnused }.map { $0.id }.sorted()
+            finalTenContestants = tickets.filter { !$0.isDrawn }.map { $0.id }.sorted()
         }
         autosave()
     }
