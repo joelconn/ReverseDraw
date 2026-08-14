@@ -7,8 +7,8 @@ struct OperatorView: View {
     @State private var showInfo = false
 
     var drawCount: Int { state.drawHistory.count }
-    var threshold: Int { state.config.threshold }
-    var remaining: Int { state.config.totalTickets - drawCount }
+    var threshold: Int { state.config.finalTenThreshold }
+    var remaining: Int { state.config.drawableTickets - drawCount }
 
     var body: some View {
         VStack(spacing: 0) {
