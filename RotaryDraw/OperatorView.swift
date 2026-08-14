@@ -274,6 +274,38 @@ struct OperatorView: View {
             Divider()
 
             VStack(alignment: .leading, spacing: 10) {
+                Text("Event Configuration")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    Text("Total Tickets")
+                        .font(.caption)
+                    Spacer()
+                    TextField("250", value: Binding(
+                        get: { state.config.numTickets },
+                        set: { state.config.numTickets = $0 }
+                    ), format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 80)
+                }
+
+                HStack {
+                    Text("Final Ten After Draw #")
+                        .font(.caption)
+                    Spacer()
+                    TextField("240", value: Binding(
+                        get: { state.config.threshold },
+                        set: { state.config.threshold = $0 }
+                    ), format: .number)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 80)
+                }
+            }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Reveal Durations (seconds)")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
