@@ -298,6 +298,10 @@ final class EventState {
     // MARK: - Session
 
     func startEvent() {
+        // If threshold is still at the default and numTickets changed, auto-update it
+        if config.threshold == 240 && config.numTickets != 250 {
+            config.threshold = config.finalTenThreshold
+        }
         configure(
             eventName: eventName,
             totalTickets: config.totalTickets,
