@@ -103,10 +103,8 @@ struct RevealOverlay: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(duration)) {
+            state.clearReveal()
             withAnimation(.easeOut(duration: 0.4)) { opacity = 0 }
-            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(0.45)) {
-                state.clearReveal()
-            }
         }
     }
 }
