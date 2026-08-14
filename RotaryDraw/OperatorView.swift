@@ -247,6 +247,7 @@ struct OperatorView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .keyboardShortcut(.space, modifiers: [])
+            .disabled(state.currentReveal != nil)
 
             Button {
                 state.markNotPresent()
@@ -488,6 +489,7 @@ struct OperatorView: View {
                     let drawNum = i + 1
                     let isLatest = ticketID == state.currentReveal
                     let ticket = state.tickets.first { $0.id == ticketID }
+                    let guest = state.guest(for: ticketID)
                     let isSpecial = ticket?.isSpecialPrize ?? false
                     let isNotPresent = ticket?.wasNotPresent ?? false
 
@@ -497,14 +499,22 @@ struct OperatorView: View {
                             .foregroundStyle(.secondary)
                             .frame(width: 62, alignment: .leading)
 
-                        Text("#\(ticketID)")
-                            .font(.system(.body, design: .monospaced))
-                            .fontWeight(isLatest ? .bold : (isSpecial ? .semibold : .regular))
-                            .foregroundStyle(
-                                isNotPresent ? Color.secondary :
-                                isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
-                            )
-                            .strikethrough(isNotPresent, color: .secondary)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("#\(ticketID)")
+                                .font(.system(.body, design: .monospaced))
+                                .fontWeight(isLatest ? .bold : (isSpecial ? .semibold : .regular))
+                                .foregroundStyle(
+                                    isNotPresent ? Color.secondary :
+                                    isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
+                                )
+                                .strikethrough(isNotPresent, color: .secondary)
+                            if let guestName = guest?.name {
+                                Text(guestName)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
 
                         if isSpecial {
                             Image(systemName: "star.fill")
@@ -560,6 +570,7 @@ struct OperatorView: View {
             Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
+                .lineLimit(1)
         }
     }
 }
