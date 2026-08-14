@@ -50,25 +50,36 @@ if [ -n "$NEW_MARKETING_VERSION" ]; then
   echo "Marketing version: $CURRENT_MARKETING -> $NEW_MARKETING_VERSION"
 fi
 
-# --- Archive ---
+# --- Archive for both macOS and iOS ---
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
-"$XCODEBUILD" archive \
-  -project "$PROJECT_ROOT/RotaryDraw.xcodeproj" \
-  -scheme RotaryDraw \
-  -configuration Release \
-  -destination 'generic/platform=macOS' \
-  -archivePath "$ARCHIVE_PATH"
+for PLATFORM in macOS iOS; do
+  ARCHIVE_NAME="RotaryDraw_$PLATFORM.xcarchive"
+  ARCHIVE_FILE="$BUILD_DIR/$ARCHIVE_NAME"
+  EXPORT_DIR="$BUILD_DIR/export_$PLATFORM"
 
-# --- Export + upload to TestFlight in one step ---
-"$XCODEBUILD" -exportArchive \
-  -archivePath "$ARCHIVE_PATH" \
-  -exportOptionsPlist "$EXPORT_OPTIONS" \
-  -exportPath "$EXPORT_PATH" \
-  -authenticationKeyPath "$APP_STORE_CONNECT_KEY_PATH" \
-  -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
-  -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+  echo ""
+  echo "Archiving for $PLATFORM..."
+
+  "$XCODEBUILD" archive \
+    -project "$PROJECT_ROOT/RotaryDraw.xcodeproj" \
+    -scheme RotaryDraw \
+    -configuration Release \
+    -destination "generic/platform=$PLATFORM" \
+    -archivePath "$ARCHIVE_FILE"
+
+  # --- Export + upload to TestFlight in one step ---
+  echo "Exporting and uploading $PLATFORM..."
+
+  "$XCODEBUILD" -exportArchive \
+    -archivePath "$ARCHIVE_FILE" \
+    -exportOptionsPlist "$EXPORT_OPTIONS" \
+    -exportPath "$EXPORT_DIR" \
+    -authenticationKeyPath "$APP_STORE_CONNECT_KEY_PATH" \
+    -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+    -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+done
 
 echo ""
 echo "Uploaded build $NEW_BUILD to App Store Connect. Processing usually takes a few minutes —"
