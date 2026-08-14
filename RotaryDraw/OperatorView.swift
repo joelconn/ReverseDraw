@@ -415,7 +415,11 @@ struct OperatorView: View {
     private var drawSection: some View {
         VStack(spacing: 12) {
             Button {
-                state.drawNextTicket()
+                if state.currentReveal != nil {
+                    state.clearReveal()
+                } else {
+                    state.drawNextTicket()
+                }
             } label: {
                 Label("Draw Next Ticket", systemImage: "ticket.fill")
                     .font(.title3.bold())
@@ -425,7 +429,6 @@ struct OperatorView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .keyboardShortcut(.space, modifiers: [])
-            .disabled(state.currentReveal != nil)
 
             Button {
                 state.markNotPresent()
