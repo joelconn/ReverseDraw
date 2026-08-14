@@ -195,6 +195,26 @@ struct OperatorView: View {
                 }
 
                 HStack {
+                    Text("Drawable Tickets")
+                        .font(.caption)
+                    Spacer()
+                    Text("\(state.config.totalTickets - state.config.unusedTickets.count)")
+                        .font(.caption.bold())
+                        .foregroundStyle(.blue)
+                }
+
+                HStack {
+                    Text("Final Ten Size")
+                        .font(.caption)
+                    Spacer()
+                    let drawableCount = state.config.totalTickets - state.config.unusedTickets.count
+                    let finalTenSize = max(0, drawableCount - state.config.threshold)
+                    Text("\(finalTenSize)")
+                        .font(.caption.bold())
+                        .foregroundStyle(.orange)
+                }
+
+                HStack {
                     Text("Guest List")
                         .font(.caption)
                     Spacer()

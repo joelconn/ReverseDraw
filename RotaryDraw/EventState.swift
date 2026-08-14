@@ -18,7 +18,8 @@ struct EventConfig: Codable {
         specialPrizes.values.reduce(0, +)
     }
     var totalTickets: Int { numTickets }
-    var finalTenThreshold: Int { max(1, numTickets - 10) }
+    var drawableTickets: Int { numTickets - unusedTickets.count }
+    var finalTenThreshold: Int { max(1, drawableTickets - 10) }
     var remainingPrizes: Double {
         max(0, totalPrizePool - specialPrizesTotal)
     }
