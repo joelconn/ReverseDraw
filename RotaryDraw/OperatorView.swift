@@ -659,7 +659,7 @@ struct OperatorView: View {
                             .foregroundStyle(.secondary)
                             .frame(width: 62, alignment: .leading)
 
-                        VStack(alignment: .leading, spacing: 1) {
+                        VStack(alignment: .leading, spacing: 0) {
                             Text("#\(ticketID)")
                                 .font(.system(.body, design: .monospaced))
                                 .fontWeight(isLatest ? .bold : (isSpecial ? .semibold : .regular))
@@ -668,12 +668,11 @@ struct OperatorView: View {
                                     isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
                                 )
                                 .strikethrough(isNotPresent, color: .secondary)
-                            if let guestName = guest?.name {
-                                Text(guestName)
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
-                            }
+                            Text(guest?.name ?? " ")
+                                .font(.caption2)
+                                .foregroundStyle(guest?.name == nil ? .clear : .secondary)
+                                .lineLimit(1)
+                                .frame(height: 14)
                         }
 
                         if isSpecial {
