@@ -345,7 +345,7 @@ struct SetupView: View {
 
                     Spacer()
 
-                    Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                    Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
