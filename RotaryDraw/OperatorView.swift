@@ -4,6 +4,7 @@ struct OperatorView: View {
     @Environment(EventState.self) private var state
     @Environment(WindowManager.self) private var windowManager
     @State private var showSettings = false
+    @State private var showInfo = false
 
     var drawCount: Int { state.drawHistory.count }
     var threshold: Int { state.config.threshold }
@@ -96,7 +97,36 @@ struct OperatorView: View {
     private var controlColumn: some View {
         ScrollView {
             VStack(spacing: 16) {
-                settingsButton
+                HStack(spacing: 8) {
+                    Button(action: { showSettings.toggle() }) {
+                        Image(systemName: "gear")
+                        Text("Settings")
+                        Spacer()
+                        Image(systemName: showSettings ? "chevron.up" : "chevron.down")
+                    }
+                    .font(.subheadline.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .foregroundStyle(.primary)
+                    .buttonStyle(.bordered)
+
+                    Button(action: { showInfo.toggle() }) {
+                        Image(systemName: "info.circle")
+                    }
+                    .font(.subheadline.bold())
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 10)
+                    .foregroundStyle(.primary)
+                    .buttonStyle(.bordered)
+                }
+
+                if showSettings {
+                    settingsPanel
+                }
+
+                if showInfo {
+                    eventInfoPanel
+                }
 
                 if state.phase == .drawing {
                     drawSection
@@ -115,30 +145,126 @@ struct OperatorView: View {
                 }
 
                 Spacer(minLength: 20)
+
+                Button("Exit & Save", systemImage: "arrow.uturn.left") {
+                    state.reset()
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+                .controlSize(.small)
+                .frame(maxWidth: .infinity)
             }
             .padding(16)
         }
     }
 
-    private var settingsButton: some View {
-        VStack(spacing: 0) {
-            Button(action: { showSettings.toggle() }) {
-                HStack {
-                    Image(systemName: "gear")
-                    Text(showSettings ? "Hide Settings" : "Settings")
-                    Spacer()
-                    Image(systemName: showSettings ? "chevron.up" : "chevron.down")
-                }
-                .font(.subheadline.bold())
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .foregroundStyle(.primary)
-            }
-            .buttonStyle(.bordered)
+    @ViewBuilder
+    private var eventInfoPanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Divider()
 
-            if showSettings {
-                settingsPanel
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Event Info")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    Text("Event Name")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.eventName)
+                        .font(.caption.bold())
+                }
+
+                Divider()
+
+                HStack {
+                    Text("Total Tickets")
+                        .font(.caption)
+                    Spacer()
+                    Text("\(state.config.totalTickets)")
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Unused Tickets")
+                        .font(.caption)
+                    Spacer()
+                    Text("\(state.config.unusedTickets.count)")
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Guest List")
+                        .font(.caption)
+                    Spacer()
+                    Text("\(state.guestList.count) guests")
+                        .font(.caption.bold())
+                }
+
+                Divider()
+
+                HStack {
+                    Text("Price Per Ticket")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.pricePerTicket, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Total Revenue")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.totalRevenue, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Prize Pool (50%)")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.totalPrizePool, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                        .foregroundStyle(.green)
+                }
+
+                Divider()
+
+                HStack {
+                    Text("Special Prizes")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.specialPrizesTotal, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Final Ten Threshold")
+                        .font(.caption)
+                    Spacer()
+                    Text("After draw #\(state.config.threshold)")
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Final Ten Pot")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.finalTenPot, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("Bonus Draw Amount")
+                        .font(.caption)
+                    Spacer()
+                    Text(state.config.bonusDrawAmount, format: .currency(code: "USD"))
+                        .font(.caption.bold())
+                }
             }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
         }
     }
 
