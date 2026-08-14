@@ -70,6 +70,7 @@ struct RevealOverlay: View {
 
                 if showConfetti {
                     ConfettiView(intensity: .dramatic)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .ignoresSafeArea()
                         .allowsHitTesting(false)
                 }
