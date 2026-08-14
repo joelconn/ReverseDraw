@@ -46,12 +46,42 @@ struct FinalTenView: View {
                              : "\(remaining) contestant\(remaining == 1 ? "" : "s") remaining — \(pot, format: .currency(code: "USD")) pot")
                             .font(.title2)
                             .foregroundStyle(.secondary)
+
+                        if state.potSplitDone && remaining > 1 {
+                            whatIfSimulation
+                                .padding(.top, 8)
+                        }
                     }
                 }
 
                 contestantGrid
             }
             .padding(40)
+        }
+    }
+
+    private var whatIfSimulation: some View {
+        VStack(alignment: .center, spacing: 6) {
+            Text("What If?")
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 12) {
+                ForEach(1...remaining, id: \.self) { count in
+                    VStack(spacing: 2) {
+                        Text("\(count)")
+                            .font(.caption2.bold())
+                            .foregroundStyle(.secondary)
+                        Text(pot / Double(count), format: .currency(code: "USD"))
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .foregroundStyle(.orange)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                    .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 6))
+                }
+            }
+            .frame(maxWidth: .infinity)
         }
     }
 
