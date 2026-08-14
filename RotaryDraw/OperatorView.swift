@@ -632,6 +632,20 @@ struct OperatorView: View {
             .controlSize(.large)
             .font(.title3.bold())
             .frame(maxWidth: .infinity)
+
+            if state.lastRevealedTicketID != nil {
+                Button {
+                    state.markNotPresent()
+                } label: {
+                    Label("Not Present", systemImage: "person.slash.fill")
+                        .font(.title3.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+                .controlSize(.large)
+            }
         }
         .padding(.vertical, 8)
     }
