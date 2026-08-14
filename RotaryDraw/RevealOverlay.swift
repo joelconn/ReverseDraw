@@ -13,9 +13,22 @@ struct RevealOverlay: View {
             let isElimination = state.currentRevealIsElimination
             let isCelebration = ticket.isSpecialPrize || isGrandWinner
 
-            ZStack {
+            ZStack(alignment: .topTrailing) {
                 Color.black.opacity(0.93)
                     .ignoresSafeArea()
+
+                Button {
+                    state.clearReveal()
+                } label: {
+                    Text("Skip")
+                        .font(.caption.bold())
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.1), in: Capsule())
+                }
+                .padding(20)
+                .keyboardShortcut(.return, modifiers: [])
 
                 VStack(spacing: 20) {
                     Text(isGrandWinner ? "WINNER" : (isElimination ? "ELIMINATED" : (ticket.isSpecialPrize ? "SPECIAL PRIZE" : "TICKET NUMBER")))
