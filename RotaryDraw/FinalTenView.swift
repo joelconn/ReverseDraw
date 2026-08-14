@@ -18,15 +18,15 @@ struct FinalTenView: View {
                     .allowsHitTesting(false)
             }
 
-            VStack(spacing: 40) {
-                VStack(spacing: 10) {
+            VStack(spacing: 20) {
+                VStack(spacing: 6) {
                     Text(state.potSplitDone ? "Final 10 Winners!" : "Final 10")
-                        .font(.system(size: 72, weight: .black, design: .rounded))
+                        .font(.system(size: 56, weight: .black, design: .rounded))
                         .foregroundStyle(state.potSplitDone ? .yellow : .teal)
 
                     if pot > 0 {
                         Text(potSplit, format: .currency(code: "USD"))
-                            .font(.system(size: 96, weight: .black, design: .rounded))
+                            .font(.system(size: 72, weight: .black, design: .rounded))
                             .foregroundStyle(.yellow)
                             .scaleEffect(potSplitScale)
                             .contentTransition(.numericText())
@@ -44,19 +44,19 @@ struct FinalTenView: View {
                         Text(state.potSplitDone
                              ? "each — \(remaining) winner\(remaining == 1 ? "" : "s") split \(pot, format: .currency(code: "USD")) pot"
                              : "\(remaining) contestant\(remaining == 1 ? "" : "s") remaining — \(pot, format: .currency(code: "USD")) pot")
-                            .font(.title2)
+                            .font(.headline)
                             .foregroundStyle(.secondary)
 
                         if state.potSplitDone && remaining > 1 {
                             whatIfSimulation
-                                .padding(.top, 8)
+                                .padding(.top, 4)
                         }
                     }
                 }
 
                 contestantGrid
             }
-            .padding(40)
+            .padding(24)
         }
     }
 
@@ -89,8 +89,8 @@ struct FinalTenView: View {
         let allIDs = (state.finalTenContestants + state.eliminated).sorted()
 
         return LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 5),
-            spacing: 16
+            columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 5),
+            spacing: 12
         ) {
             ForEach(allIDs, id: \.self) { id in
                 let isEliminated = state.eliminated.contains(id)
@@ -103,7 +103,7 @@ struct FinalTenView: View {
                 )
             }
         }
-        .padding(.horizontal, 40)
+        .padding(.horizontal, 12)
     }
 }
 
