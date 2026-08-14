@@ -70,7 +70,6 @@ struct RevealOverlay: View {
 
                 if showConfetti {
                     ConfettiView(intensity: .dramatic)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .ignoresSafeArea()
                         .allowsHitTesting(false)
                 }
@@ -102,9 +101,9 @@ struct RevealOverlay: View {
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(duration)) {
             withAnimation(.easeOut(duration: 0.4)) { opacity = 0 }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(0.45)) {
                 state.clearReveal()
             }
         }
