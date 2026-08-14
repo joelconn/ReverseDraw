@@ -214,7 +214,7 @@ final class EventState {
 
         if drawHistory.count >= config.threshold {
             phase = .finalTen
-            finalTenContestants = tickets.filter { !$0.isDrawn }.map { $0.id }.sorted()
+            finalTenContestants = tickets.filter { !$0.isDrawn && !$0.isUnused }.map { $0.id }.sorted()
         }
 
         autosave()
@@ -334,7 +334,7 @@ final class EventState {
         lastRevealedTicketID = nil
         if drawHistory.count >= config.threshold {
             phase = .finalTen
-            finalTenContestants = tickets.filter { !$0.isDrawn }.map { $0.id }.sorted()
+            finalTenContestants = tickets.filter { !$0.isDrawn && !$0.isUnused }.map { $0.id }.sorted()
         }
         autosave()
     }
