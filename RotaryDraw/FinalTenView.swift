@@ -61,27 +61,55 @@ struct FinalTenView: View {
     }
 
     private var whatIfSimulation: some View {
-        VStack(alignment: .center, spacing: 6) {
-            Text("What If?")
+        let simulation = state.simulateRemainingEliminations()
+        let winner = state.finalTenContestants.first { !simulation.contains($0) }
+
+        return VStack(alignment: .leading, spacing: 8) {
+            Text("What If? (Simulated)")
                 .font(.caption.bold())
                 .foregroundStyle(.secondary)
 
-            HStack(spacing: 12) {
-                ForEach(1...remaining, id: \.self) { count in
-                    VStack(spacing: 2) {
-                        Text("\(count)")
-                            .font(.caption2.bold())
-                            .foregroundStyle(.secondary)
-                        Text(pot / Double(count), format: .currency(code: "USD"))
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(Array(simulation.enumerated()), id: \.element) { index, ticketID in
+                    let remaining = state.finalTenContestants.count - index - 1
+                    let guest = state.guest(for: ticketID)
+                    HStack(spacing: 8) {
+                        Text("#\(ticketID)")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
                             .foregroundStyle(.orange)
+                        if let guest = guest {
+                            Text(guest.name)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text("\(remaining) left")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-                    .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 6))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.orange.opacity(0.05), in: RoundedRectangle(cornerRadius: 4))
+                }
+
+                if let winner = winner {
+                    let guest = state.guest(for: winner)
+                    HStack(spacing: 8) {
+                        Text("🏆 Winner: #\(winner)")
+                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .foregroundStyle(.yellow)
+                        if let guest = guest {
+                            Text(guest.name)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.yellow.opacity(0.1), in: RoundedRectangle(cornerRadius: 4))
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

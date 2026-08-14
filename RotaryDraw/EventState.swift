@@ -126,6 +126,16 @@ final class EventState {
         return eliminated.contains(id)
     }
 
+    func simulateRemainingEliminations() -> [Int] {
+        var simulated = finalTenContestants
+        var sequence: [Int] = []
+        while simulated.count > 1, let eliminated = simulated.randomElement() {
+            sequence.append(eliminated)
+            simulated.removeAll { $0 == eliminated }
+        }
+        return sequence
+    }
+
     var hasExistingSession: Bool {
         persistence.hasSession
     }
