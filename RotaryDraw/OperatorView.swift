@@ -459,7 +459,7 @@ struct OperatorView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
                 .controlSize(.large)
-                .disabled(state.finalTenContestants.count <= 1)
+                .disabled(state.finalTenContestants.count <= 1 || state.currentReveal != nil)
                 .keyboardShortcut(.space, modifiers: [])
 
                 Button {
@@ -474,21 +474,23 @@ struct OperatorView: View {
                 .tint(.yellow)
                 .controlSize(.large)
                 .disabled(state.currentReveal != nil || state.finalTenContestants.isEmpty)
+            }
 
-                Button { state.undo() } label: {
-                    HStack {
-                        Image(systemName: "arrow.uturn.backward")
-                        Text("Undo")
-                        if state.undoStack.count > 0 {
-                            Text("(\(state.undoStack.count))").foregroundStyle(.secondary)
-                        }
+            Button { state.undo() } label: {
+                HStack {
+                    Image(systemName: "arrow.uturn.backward")
+                    Text("Undo")
+                    if state.undoStack.count > 0 {
+                        Text("(\(state.undoStack.count))").foregroundStyle(.secondary)
                     }
-                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.bordered)
-                .disabled(!state.canUndo)
-                .keyboardShortcut("z", modifiers: .command)
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .disabled(!state.canUndo)
+            .keyboardShortcut("z", modifiers: .command)
 
+            if !state.potSplitDone {
                 Divider()
             }
 
