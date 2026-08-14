@@ -663,78 +663,86 @@ struct OperatorView: View {
 
             Divider()
 
-            List {
-                ForEach(state.drawHistory.indices.reversed(), id: \.self) { i in
-                    let ticketID = state.drawHistory[i]
-                    let drawNum = i + 1
-                    let isLatest = ticketID == state.currentReveal
-                    let ticket = state.tickets.first { $0.id == ticketID }
-                    let guest = state.guest(for: ticketID)
-                    let isSpecial = ticket?.isSpecialPrize ?? false
-                    let isNotPresent = ticket?.wasNotPresent ?? false
+            ScrollViewReader { proxy in
+                List {
+                    ForEach(state.drawHistory.indices.reversed(), id: \.self) { i in
+                        let ticketID = state.drawHistory[i]
+                        let drawNum = i + 1
+                        let isLatest = ticketID == state.currentReveal
+                        let ticket = state.tickets.first { $0.id == ticketID }
+                        let guest = state.guest(for: ticketID)
+                        let isSpecial = ticket?.isSpecialPrize ?? false
+                        let isNotPresent = ticket?.wasNotPresent ?? false
 
-                    HStack(spacing: 10) {
-                        Text("Draw \(drawNum)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 62, alignment: .leading)
+                        HStack(spacing: 10) {
+                            Text("Draw \(drawNum)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .frame(width: 62, alignment: .leading)
 
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("#\(ticketID)")
-                                .font(.system(.body, design: .monospaced))
-                                .fontWeight(isLatest ? .bold : (isSpecial ? .semibold : .regular))
-                                .foregroundStyle(
-                                    isNotPresent ? Color.secondary :
-                                    isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
-                                )
-                                .strikethrough(isNotPresent, color: .secondary)
-                                .lineLimit(1)
-                                .frame(height: 18)
-                            Text(guest?.name ?? " ")
-                                .font(.caption2)
-                                .foregroundStyle(guest?.name == nil ? .clear : .secondary)
-                                .lineLimit(1)
-                                .frame(height: 14)
-                        }
-                        .frame(height: 32)
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("#\(ticketID)")
+                                    .font(.system(.body, design: .monospaced))
+                                    .fontWeight(isLatest ? .bold : (isSpecial ? .semibold : .regular))
+                                    .foregroundStyle(
+                                        isNotPresent ? Color.secondary :
+                                        isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
+                                    )
+                                    .strikethrough(isNotPresent, color: .secondary)
+                                    .lineLimit(1)
+                                    .frame(height: 18)
+                                Text(guest?.name ?? " ")
+                                    .font(.caption2)
+                                    .foregroundStyle(guest?.name == nil ? .clear : .secondary)
+                                    .lineLimit(1)
+                                    .frame(height: 14)
+                            }
+                            .frame(height: 32)
 
-                        if isSpecial {
-                            Image(systemName: "star.fill")
-                                .font(.caption2)
-                                .foregroundStyle(.yellow)
-                            if let amt = ticket?.prizeAmount, amt > 0 {
-                                Text(amt, format: .currency(code: "USD"))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                            if isSpecial {
+                                Image(systemName: "star.fill")
+                                    .font(.caption2)
+                                    .foregroundStyle(.yellow)
+                                if let amt = ticket?.prizeAmount, amt > 0 {
+                                    Text(amt, format: .currency(code: "USD"))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            Spacer()
+
+                            if isNotPresent {
+                                Text("N/P")
+                                    .font(.caption2.bold())
+                                    .foregroundStyle(.red)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(.red.opacity(0.1), in: Capsule())
+                            } else if isLatest {
+                                Text("Latest")
+                                    .font(.caption2)
+                                    .foregroundStyle(.blue)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(.blue.opacity(0.1), in: Capsule())
                             }
                         }
-
-                        Spacer()
-
-                        if isNotPresent {
-                            Text("N/P")
-                                .font(.caption2.bold())
-                                .foregroundStyle(.red)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(.red.opacity(0.1), in: Capsule())
-                        } else if isLatest {
-                            Text("Latest")
-                                .font(.caption2)
-                                .foregroundStyle(.blue)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(.blue.opacity(0.1), in: Capsule())
-                        }
+                        .listRowBackground(
+                            isNotPresent ? Color.red.opacity(0.04) :
+                            isSpecial ? Color.yellow.opacity(0.07) :
+                            isLatest ? Color.blue.opacity(0.05) : Color.clear
+                        )
+                        .id(i)
                     }
-                    .listRowBackground(
-                        isNotPresent ? Color.red.opacity(0.04) :
-                        isSpecial ? Color.yellow.opacity(0.07) :
-                        isLatest ? Color.blue.opacity(0.05) : Color.clear
-                    )
+                }
+                .listStyle(.plain)
+                .onChange(of: state.drawHistory.count) { _, _ in
+                    if !state.drawHistory.isEmpty {
+                        withAnimation { proxy.scrollTo(0, anchor: .top) }
+                    }
                 }
             }
-            .listStyle(.plain)
         }
     }
 
