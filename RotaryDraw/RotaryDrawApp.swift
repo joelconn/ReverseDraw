@@ -20,7 +20,6 @@ struct RotaryDrawApp: App {
                 }
         }
         .defaultSize(width: 900, height: 680)
-        .commandsRemoved()
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About RotaryDraw") { NSApp.orderFrontStandardAboutPanel(nil) }
