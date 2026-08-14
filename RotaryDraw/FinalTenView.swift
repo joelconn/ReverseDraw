@@ -78,6 +78,8 @@ struct FinalTenView: View {
 }
 
 struct FinalTenCard: View {
+    @Environment(EventState.self) private var state
+
     let ticketID: Int
     let isEliminated: Bool
     var isWinner: Bool = false
@@ -92,13 +94,20 @@ struct FinalTenCard: View {
                 .foregroundStyle(isEliminated ? Color.secondary.opacity(0.4) : (isWinner ? Color.black : .white))
                 .strikethrough(isEliminated, color: .secondary)
 
+            if let guest = state.guest(for: ticketID) {
+                Text(guest.name)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(isEliminated ? Color.secondary.opacity(0.4) : (isWinner ? Color.black.opacity(0.7) : .white))
+                    .lineLimit(1)
+            }
+
             if isWinner, let winAmount {
                 Text(winAmount, format: .currency(code: "USD"))
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.black.opacity(0.7))
             }
         }
-        .frame(width: 140, height: isWinner ? 112 : 100)
+        .frame(width: 140, height: isWinner ? 128 : 116)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(isEliminated ? Color.secondary.opacity(0.08) : (isWinner ? Color.yellow : Color.teal.opacity(0.2)))
