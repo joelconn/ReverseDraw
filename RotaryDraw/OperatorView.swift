@@ -514,6 +514,25 @@ struct OperatorView: View {
                 .disabled(state.finalTenContestants.count <= 1 || state.currentReveal != nil)
                 .keyboardShortcut(.space, modifiers: [])
 
+                Menu {
+                    ForEach(state.finalTenContestants.sorted(), id: \.self) { id in
+                        let guest = state.guest(for: id)
+                        Button(role: .destructive) {
+                            state.manuallyEliminateContestant(id)
+                        } label: {
+                            Text("#\(id)\(guest.map { " — \($0.name)" } ?? "")")
+                        }
+                    }
+                } label: {
+                    Label("Not Present", systemImage: "xmark.circle.fill")
+                        .font(.title3.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .disabled(state.finalTenContestants.count <= 1 || state.currentReveal != nil)
+
                 Button {
                     state.splitPot()
                 } label: {

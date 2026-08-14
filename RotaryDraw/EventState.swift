@@ -255,6 +255,16 @@ final class EventState {
         autosave()
     }
 
+    func manuallyEliminateContestant(_ ticketID: Int) {
+        guard phase == .finalTen, !potSplitDone,
+              finalTenContestants.count > 1,
+              finalTenContestants.contains(ticketID) else { return }
+        pushSnapshot()
+        finalTenContestants.removeAll { $0 == ticketID }
+        eliminated.append(ticketID)
+        autosave()
+    }
+
     /// Ends the Final Ten elimination process and splits the pot evenly among
     /// whoever remains, regardless of count.
     func splitPot() {
