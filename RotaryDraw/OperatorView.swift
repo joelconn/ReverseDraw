@@ -688,12 +688,15 @@ struct OperatorView: View {
                                     isSpecial ? Color(red: 0.85, green: 0.65, blue: 0.0) : .primary
                                 )
                                 .strikethrough(isNotPresent, color: .secondary)
+                                .lineLimit(1)
+                                .frame(height: 18)
                             Text(guest?.name ?? " ")
                                 .font(.caption2)
                                 .foregroundStyle(guest?.name == nil ? .clear : .secondary)
                                 .lineLimit(1)
                                 .frame(height: 14)
                         }
+                        .frame(height: 32)
 
                         if isSpecial {
                             Image(systemName: "star.fill")
