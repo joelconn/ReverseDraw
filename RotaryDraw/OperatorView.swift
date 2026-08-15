@@ -2,7 +2,9 @@ import SwiftUI
 
 struct OperatorView: View {
     @Environment(EventState.self) private var state
+    #if os(macOS)
     @Environment(WindowManager.self) private var windowManager
+    #endif
     @State private var showSettings = false
     @State private var showInfo = false
 
