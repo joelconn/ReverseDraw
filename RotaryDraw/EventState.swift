@@ -375,6 +375,7 @@ final class EventState {
         carryoverPrize = nil
         potSplitDone = false
         eventName = ""
+        guestList = [:]
         resetTickets()
         persistence.clear()
     }
