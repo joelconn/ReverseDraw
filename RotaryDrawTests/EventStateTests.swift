@@ -217,4 +217,21 @@ struct EventStateTests {
         #expect(state.drawHistory.isEmpty)
         #expect(state.eventName.isEmpty)
     }
+
+    // MARK: - Unused Tickets / Special Prizes
+
+    @Test func unreachableSpecialPrizesDetectsDrawsBeyondThreshold() {
+        let state = makeState(totalTickets: 100, threshold: 80)
+        state.config.specialPrizes = ["79": 100.0, "80": 200.0, "81": 300.0, "85": 400.0]
+
+        // With 100 drawable tickets, finalTenThreshold = 90 (100 - 10)
+        // So prizes for 79, 80, 81, 85 should all be reachable
+        #expect(state.config.unreachableSpecialPrizes.isEmpty)
+
+        // Mark 15 tickets as unused: 100 - 15 = 85 drawable
+        // finalTenThreshold becomes 75 (85 - 10)
+        // So prizes for 79, 80, 81, 85 are now unreachable
+        state.config.unusedTickets = Set(1...15)
+        #expect(state.config.unreachableSpecialPrizes == ["79", "80", "81", "85"])
+    }
 }

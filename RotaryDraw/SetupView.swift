@@ -53,24 +53,6 @@ struct SetupView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 24) {
-                    SettingsSection(title: "Manual Recovery (Optional)") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Paste drawn ticket numbers (comma or space separated)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            TextEditor(text: $recoveryTickets)
-                                .font(.system(.body, design: .monospaced))
-                                .textFieldStyle(.roundedBorder)
-                                .frame(height: 80)
-                            Button("Recover from Tickets") {
-                                state.recoverFromDrawnTickets(drawnIDs: parseRecoveryTickets())
-                                recoveryTickets = ""
-                            }
-                            .buttonStyle(.bordered)
-                            .controlSize(.small)
-                        }
-                    }
-
                     SettingsSection(title: "Event Name") {
                         TextField("e.g. Spring Gala 2026", text: $state.eventName)
                             .textFieldStyle(.roundedBorder)
@@ -168,6 +150,35 @@ struct SetupView: View {
                     }
 
                     SettingsSection(title: "Special Prize Draws") {
+                        if !state.config.unreachableSpecialPrizes.isEmpty {
+                            HStack(spacing: 12) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.orange)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Unreachable Prizes")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                    Text("Draw(s) \(state.config.unreachableSpecialPrizes.joined(separator: ", ")) are beyond the final ten threshold (\(state.config.finalTenThreshold)). These won't apply—final ten starts at draw \(state.config.finalTenThreshold + 1).")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Button {
+                                    for key in state.config.unreachableSpecialPrizes {
+                                        state.config.specialPrizes.removeValue(forKey: key)
+                                    }
+                                } label: {
+                                    Text("Remove")
+                                        .font(.caption)
+                                }
+                                .buttonStyle(.bordered)
+                                .controlSize(.small)
+                            }
+                            .padding(12)
+                            .background(.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                            .padding(.bottom, 8)
+                        }
+
                         if !sortedSpecialPrizes.isEmpty {
                             HStack {
                                 Text("Draw #")
@@ -326,6 +337,24 @@ struct SetupView: View {
                                 showFilePicker = true
                             }
                             .buttonStyle(.bordered)
+                        }
+                    }
+
+                    SettingsSection(title: "Manual Recovery (Optional)") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Paste drawn ticket numbers (comma or space separated)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            TextEditor(text: $recoveryTickets)
+                                .font(.system(.body, design: .monospaced))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(height: 80)
+                            Button("Recover from Tickets") {
+                                state.recoverFromDrawnTickets(drawnIDs: parseRecoveryTickets())
+                                recoveryTickets = ""
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
                         }
                     }
                 }

@@ -27,6 +27,13 @@ struct EventConfig: Codable {
         max(0, totalPrizePool - specialPrizesTotal - bonusDrawAmount)
     }
 
+    var unreachableSpecialPrizes: [String] {
+        specialPrizes.keys.filter { key in
+            guard let pos = Int(key) else { return false }
+            return pos > finalTenThreshold
+        }.sorted { (Int($0) ?? 0) < (Int($1) ?? 0) }
+    }
+
     init() {}
 
     enum CodingKeys: String, CodingKey {
