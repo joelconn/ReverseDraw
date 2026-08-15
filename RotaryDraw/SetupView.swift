@@ -14,6 +14,7 @@ struct SetupView: View {
     @State private var recoveryTickets: String = ""
     @State private var unusedTickets: String = ""
     @State private var showUpdates = false
+    @State private var totalPrizePoolInput: Double = 0
 
     var sortedSpecialPrizes: [(key: String, value: Double)] {
         state.config.specialPrizes
@@ -91,6 +92,9 @@ struct SetupView: View {
                             TextField("$0", value: $state.config.pricePerTicket, format: .currency(code: "USD"))
                                 .textFieldStyle(.roundedBorder)
                                 .frame(width: 120)
+                                .onChange(of: state.config.pricePerTicket) {
+                                    totalPrizePoolInput = state.config.totalPrizePool
+                                }
                         }
                         Divider()
                         SettingsRow(label: "Total Revenue") {
@@ -98,11 +102,15 @@ struct SetupView: View {
                                 .fontWeight(.semibold)
                                 .frame(width: 120, alignment: .trailing)
                         }
-                        SettingsRow(label: "Prize Pool (50%)") {
-                            Text(state.config.totalPrizePool, format: .currency(code: "USD"))
-                                .fontWeight(.bold)
-                                .foregroundStyle(.green)
-                                .frame(width: 120, alignment: .trailing)
+                        SettingsRow(label: "Total Prize Pool") {
+                            TextField("$0", value: $totalPrizePoolInput, format: .currency(code: "USD"))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 120)
+                                .onChange(of: totalPrizePoolInput) {
+                                    if totalPrizePoolInput > 0 {
+                                        state.config.pricePerTicket = totalPrizePoolInput * 2.0 / Double(state.config.numTickets)
+                                    }
+                                }
                         }
                         SettingsRow(label: "Special Prizes") {
                             Text(state.config.specialPrizesTotal, format: .currency(code: "USD"))
@@ -114,6 +122,9 @@ struct SetupView: View {
                                 .foregroundStyle(.blue)
                                 .frame(width: 120, alignment: .trailing)
                         }
+                    }
+                    .onAppear {
+                        totalPrizePoolInput = state.config.totalPrizePool
                     }
 
                     SettingsSection(title: "Event Settings") {
