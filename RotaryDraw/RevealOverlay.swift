@@ -84,6 +84,8 @@ struct RevealOverlay: View {
             opacity = 1.0
         }
 
+        guard state.phase != .bonusDraw else { return }
+
         let duration = isCelebration
             ? state.config.winnerRevealDuration
             : state.config.normalRevealDuration
