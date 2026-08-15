@@ -4,7 +4,6 @@ struct RevealOverlay: View {
     @Environment(EventState.self) private var state
     @State private var scale: CGFloat = 0.05
     @State private var opacity: Double = 0
-    @State private var showConfetti = false
 
     var body: some View {
         if let ticket = state.revealTicket {
@@ -68,12 +67,6 @@ struct RevealOverlay: View {
                 .scaleEffect(scale)
                 .opacity(opacity)
 
-                if showConfetti {
-                    ConfettiView(intensity: .dramatic)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .ignoresSafeArea()
-                        .allowsHitTesting(false)
-                }
             }
             .ignoresSafeArea()
             .transition(.opacity)
@@ -85,7 +78,6 @@ struct RevealOverlay: View {
     private func handleAppear(ticket: Ticket, isCelebration: Bool) {
         scale = 0.05
         opacity = 0
-        showConfetti = false
 
         withAnimation(.spring(response: 0.45, dampingFraction: 0.62)) {
             scale = 1.0
@@ -95,12 +87,6 @@ struct RevealOverlay: View {
         let duration = isCelebration
             ? state.config.winnerRevealDuration
             : state.config.normalRevealDuration
-
-        if isCelebration {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                showConfetti = true
-            }
-        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(duration)) {
             state.clearReveal()
