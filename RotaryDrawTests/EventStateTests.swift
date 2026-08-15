@@ -184,6 +184,7 @@ struct EventStateTests {
         state.splitPot()
         state.startBonusDraw()
         state.drawBonusTicket()
+        state.completeBonusDraw()
 
         #expect(state.phase == .complete)
         #expect(state.currentReveal != nil)
