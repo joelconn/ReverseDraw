@@ -295,9 +295,15 @@ final class EventState {
             tickets[i].isDrawn = true
         }
         currentReveal = ticket.id
-        phase = .complete
+        lastRevealedTicketID = ticket.id
         autosave()
-        saveEventArchive(grandWinnerTicketID: ticket.id)
+    }
+
+    func completeBonusDraw() {
+        guard phase == .bonusDraw, let winnerID = currentReveal else { return }
+        phase = .complete
+        saveEventArchive(grandWinnerTicketID: winnerID)
+        autosave()
     }
 
     func undo() {

@@ -626,16 +626,25 @@ struct OperatorView: View {
                 .foregroundStyle(.secondary)
                 .font(.subheadline)
 
-            Button("Draw Bonus Ticket") {
-                state.drawBonusTicket()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.orange)
-            .controlSize(.large)
-            .font(.title3.bold())
-            .frame(maxWidth: .infinity)
+            if state.currentReveal == nil {
+                Button("Draw Bonus Ticket") {
+                    state.drawBonusTicket()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+                .controlSize(.large)
+                .font(.title3.bold())
+                .frame(maxWidth: .infinity)
+            } else {
+                Button("Complete Event") {
+                    state.completeBonusDraw()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+                .controlSize(.large)
+                .font(.title3.bold())
+                .frame(maxWidth: .infinity)
 
-            if state.lastRevealedTicketID != nil {
                 Button {
                     state.markNotPresent()
                 } label: {
@@ -647,6 +656,16 @@ struct OperatorView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
                 .controlSize(.large)
+
+                Button { state.undo() } label: {
+                    HStack {
+                        Image(systemName: "arrow.uturn.backward")
+                        Text("Undo")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!state.canUndo)
             }
         }
         .padding(.vertical, 8)
