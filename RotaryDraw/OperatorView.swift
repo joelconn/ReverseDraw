@@ -777,7 +777,7 @@ struct OperatorView: View {
                 .listStyle(.plain)
                 .onChange(of: state.drawHistory.count) { _, _ in
                     if !state.drawHistory.isEmpty {
-                        withAnimation { proxy.scrollTo(0, anchor: .top) }
+                        withAnimation { proxy.scrollTo(state.drawHistory.count - 1, anchor: .top) }
                     }
                 }
             }
