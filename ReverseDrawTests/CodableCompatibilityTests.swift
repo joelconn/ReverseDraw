@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import RotaryDraw
+@testable import ReverseDraw
 
 /// Saved sessions and event archives from earlier app versions must keep
 /// decoding as fields get added. These pin that contract against the exact

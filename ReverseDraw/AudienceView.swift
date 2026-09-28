@@ -34,7 +34,7 @@ struct AudienceView: View {
             Image(systemName: "ticket.fill")
                 .font(.system(size: 100))
                 .foregroundStyle(.blue)
-            Text("Rotary Reverse Drawing")
+            Text("Reverse Drawing")
                 .font(.system(size: 64, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
             Text("Event starting soon")

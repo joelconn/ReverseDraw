@@ -1,4 +1,4 @@
-# RotaryDraw Handoff Document
+# ReverseDraw Handoff Document
 
 **Last updated:** 2026-07-15  
 **Current version:** 1.4 (build 4)  
@@ -6,7 +6,7 @@
 
 ## Quick Status
 
-- ✅ Multiplatform (macOS 26.5 + iPadOS 26.0) reverse-drawing lottery app for Rotary Club events
+- ✅ Multiplatform (macOS 26.5 + iPadOS 26.0) reverse-drawing lottery app
 - ✅ Unit tests (15 tests, Swift Testing framework) covering game logic and Codable compatibility
 - ✅ iPad split-screen layout + external display (TV/projector) support via AppDelegate
 - ✅ Session-restore alert bug fixed (no longer re-fires on tab switch)
@@ -16,12 +16,12 @@
 ## Project Structure
 
 ```
-RotaryDraw/
-├── RotaryDraw/                           # App source
+ReverseDraw/
+├── ReverseDraw/                          # App source
 │   ├── EventState.swift                  # Core game logic (@Observable)
 │   ├── EventPhase.swift, EventArchive.swift, Snapshot.swift
 │   ├── Ticket.swift, GuestInfo.swift
-│   ├── RotaryDrawApp.swift               # Entry point (macOS Window + iOS WindowGroup)
+│   ├── ReverseDrawApp.swift              # Entry point (macOS Window + iOS WindowGroup)
 │   ├── ContentView.swift                 # Setup/Operator routing
 │   ├── SetupView.swift                   # Event config UI
 │   ├── OperatorView.swift                # Draw controls + history
@@ -33,15 +33,15 @@ RotaryDraw/
 │   ├── WindowManager.swift               # macOS second NSWindow (Audience)
 │   ├── ExternalDisplayManager.swift      # iOS external display UIWindow + AppDelegate
 │   └── [UI views: DrawingView, BonusDrawView, etc.]
-├── RotaryDrawTests/                      # Unit tests
+├── ReverseDrawTests/                     # Unit tests
 │   ├── EventStateTests.swift             # 11 tests covering draw/elimination/split/undo
 │   └── CodableCompatibilityTests.swift   # 4 tests for JSON decode compatibility
 ├── scripts/
 │   ├── release.sh                        # Archive + TestFlight upload (macOS only; iOS uploaded separately)
 │   └── ExportOptions.plist               # Export config (app-store-connect method)
-├── RotaryDraw.xcodeproj/
+├── ReverseDraw.xcodeproj/
 │   ├── project.pbxproj
-│   └── xcshareddata/xcschemes/RotaryDraw.xcscheme
+│   └── xcshareddata/xcschemes/ReverseDraw.xcscheme
 ├── CLAUDE.md                             # Development guide (xcodebuild commands, architecture, build settings)
 ├── .gitignore
 └── HANDOFF.md                            # This file
@@ -79,22 +79,22 @@ RotaryDraw/
 ```bash
 # macOS debug
 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild \
-  -project RotaryDraw.xcodeproj \
-  -scheme RotaryDraw \
+  -project ReverseDraw.xcodeproj \
+  -scheme ReverseDraw \
   -destination 'platform=macOS,arch=arm64' \
   build
 
 # iOS Simulator
 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild \
-  -project RotaryDraw.xcodeproj \
-  -scheme RotaryDraw \
+  -project ReverseDraw.xcodeproj \
+  -scheme ReverseDraw \
   -destination 'generic/platform=iOS Simulator' \
   build
 
 # Run tests
 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test \
-  -project RotaryDraw.xcodeproj \
-  -scheme RotaryDraw \
+  -project ReverseDraw.xcodeproj \
+  -scheme ReverseDraw \
   -destination 'platform=macOS,arch=arm64'
 ```
 
@@ -108,15 +108,15 @@ export APP_STORE_CONNECT_KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_S
 ./scripts/release.sh 1.4
 
 # iOS (manual for now — archive separately, then export/upload)
-xcodebuild archive -project RotaryDraw.xcodeproj -scheme RotaryDraw \
+xcodebuild archive -project ReverseDraw.xcodeproj -scheme ReverseDraw \
   -configuration Release -destination 'generic/platform=iOS' \
-  -archivePath build/RotaryDraw-iOS.xcarchive
-xcodebuild -exportArchive -archivePath build/RotaryDraw-iOS.xcarchive \
+  -archivePath build/ReverseDraw-iOS.xcarchive
+xcodebuild -exportArchive -archivePath build/ReverseDraw-iOS.xcarchive \
   -exportOptionsPlist scripts/ExportOptions.plist -exportPath build/export-ios \
   [auth key flags...]
 ```
 
-**Note**: Both platforms upload to the same app (bundle ID `com.joelconn.RotaryDraw`). Provisioning profiles bootstrapped once via Xcode Organizer → Distribute App (needed to sync server-side). After that, CLI API key works for both platforms.
+**Note**: Both platforms upload to the same app (bundle ID `com.joelconn.ReverseDraw`). Provisioning profiles bootstrapped once via Xcode Organizer → Distribute App (needed to sync server-side). After that, CLI API key works for both platforms.
 
 ## Test Suite
 
@@ -134,7 +134,7 @@ xcodebuild -exportArchive -archivePath build/RotaryDraw-iOS.xcarchive \
 
 **Run**:
 ```bash
-xcodebuild test -project RotaryDraw.xcodeproj -scheme RotaryDraw \
+xcodebuild test -project ReverseDraw.xcodeproj -scheme ReverseDraw \
   -destination 'platform=macOS,arch=arm64'
 ```
 
@@ -166,7 +166,7 @@ xcodebuild test -project RotaryDraw.xcodeproj -scheme RotaryDraw \
 - `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` — all types implicitly @MainActor
 - `ENABLE_APP_SANDBOX = YES` → file access needs `fileImporter` or security scopes
 - Deployment: macOS 26.5 (Tahoe), iOS 26.0
-- Bundle ID: `com.joelconn.RotaryDraw`
+- Bundle ID: `com.joelconn.ReverseDraw`
 - Team ID: `7K3WL7G8T4`
 
 ## Handoff Tips for Future Sessions

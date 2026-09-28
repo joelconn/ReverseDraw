@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild \
-  -project RotaryDraw.xcodeproj \
-  -scheme RotaryDraw \
+  -project ReverseDraw.xcodeproj \
+  -scheme ReverseDraw \
   -destination 'platform=macOS,arch=arm64' \
   build
 ```
@@ -53,4 +53,4 @@ Multiplatform (macOS + iPadOS) app sharing a single `@Observable` `EventState` i
 - `SWIFT_APPROACHABLE_CONCURRENCY = YES`
 - `ENABLE_APP_SANDBOX = YES`, `ENABLE_USER_SELECTED_FILES = readonly` — file access outside app container requires `fileImporter` / security-scoped resource access.
 - Deployment target: macOS 26.5 (Tahoe). No back-deployment guards needed.
-- Bundle ID: `com.joelconn.RotaryDraw`
+- Bundle ID: `com.joelconn.ReverseDraw`

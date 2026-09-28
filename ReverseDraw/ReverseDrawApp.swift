@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct RotaryDrawApp: App {
+struct ReverseDrawApp: App {
     @State private var eventState = EventState()
     #if os(macOS)
     @State private var windowManager = WindowManager()
@@ -11,7 +11,7 @@ struct RotaryDrawApp: App {
 
     var body: some Scene {
         #if os(macOS)
-        Window("RotaryDraw — Operator", id: "operator") {
+        Window("ReverseDraw — Operator", id: "operator") {
             ContentView()
                 .environment(eventState)
                 .environment(windowManager)
@@ -22,7 +22,7 @@ struct RotaryDrawApp: App {
         .defaultSize(width: 900, height: 680)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("About RotaryDraw") { NSApp.orderFrontStandardAboutPanel(nil) }
+                Button("About ReverseDraw") { NSApp.orderFrontStandardAboutPanel(nil) }
             }
             CommandGroup(after: .windowArrangement) {
                 Divider()

@@ -27,7 +27,7 @@ struct SetupView: View {
         ScrollView {
             VStack(spacing: 32) {
                 VStack(spacing: 8) {
-                    Text("Rotary Reverse Drawing")
+                    Text("Reverse Drawing")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     Text("Event Setup")

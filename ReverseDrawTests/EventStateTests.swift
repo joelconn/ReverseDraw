@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import RotaryDraw
+@testable import ReverseDraw
 
 @MainActor
 struct EventStateTests {
