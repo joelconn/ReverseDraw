@@ -399,7 +399,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.ReverseDraw;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDraw;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -438,7 +438,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.ReverseDraw;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDraw;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -460,7 +460,7 @@
 				DEVELOPMENT_TEAM = 7K3WL7G8T4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.ReverseDrawTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDrawTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
@@ -478,7 +478,7 @@
 				DEVELOPMENT_TEAM = 7K3WL7G8T4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.ReverseDrawTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joelconn.RotaryDrawTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
