@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4A98C1902FD47F6B008A49AD"
-               BuildableName = "RotaryDraw.app"
-               BlueprintName = "RotaryDraw"
+               BuildableName = "ReverseDraw.app"
+               BlueprintName = "ReverseDraw"
                ReferencedContainer = "container:RotaryDraw.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3BD8BABF614E494133772E1"
-               BuildableName = "RotaryDrawTests.xctest"
-               BlueprintName = "RotaryDrawTests"
+               BuildableName = "ReverseDrawTests.xctest"
+               BlueprintName = "ReverseDrawTests"
                ReferencedContainer = "container:RotaryDraw.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -43,8 +43,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3BD8BABF614E494133772E1"
-               BuildableName = "RotaryDrawTests.xctest"
-               BlueprintName = "RotaryDrawTests"
+               BuildableName = "ReverseDrawTests.xctest"
+               BlueprintName = "ReverseDrawTests"
                ReferencedContainer = "container:RotaryDraw.xcodeproj">
             </BuildableReference>
          </TestableReference>
