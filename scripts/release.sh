@@ -1,5 +1,5 @@
 #!/bin/bash
-# Archives RotaryDraw and uploads the build to TestFlight via App Store Connect.
+# Archives ReverseDraw and uploads the build to TestFlight via App Store Connect.
 #
 # Required environment variables (App Store Connect API key — generate at
 # appstoreconnect.apple.com > Users and Access > Integrations > App Store Connect API):
@@ -17,7 +17,7 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_FILE="$PROJECT_ROOT/RotaryDraw.xcodeproj/project.pbxproj"
 EXPORT_OPTIONS="$PROJECT_ROOT/scripts/ExportOptions.plist"
 BUILD_DIR="$PROJECT_ROOT/build"
-ARCHIVE_PATH="$BUILD_DIR/RotaryDraw.xcarchive"
+ARCHIVE_PATH="$BUILD_DIR/ReverseDraw.xcarchive"
 EXPORT_PATH="$BUILD_DIR/export"
 XCODEBUILD="/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
 
@@ -55,7 +55,7 @@ rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
 for PLATFORM in macOS iOS; do
-  ARCHIVE_NAME="RotaryDraw_$PLATFORM.xcarchive"
+  ARCHIVE_NAME="ReverseDraw_$PLATFORM.xcarchive"
   ARCHIVE_FILE="$BUILD_DIR/$ARCHIVE_NAME"
   EXPORT_DIR="$BUILD_DIR/export_$PLATFORM"
 
@@ -64,7 +64,7 @@ for PLATFORM in macOS iOS; do
 
   "$XCODEBUILD" archive \
     -project "$PROJECT_ROOT/RotaryDraw.xcodeproj" \
-    -scheme RotaryDraw \
+    -scheme ReverseDraw \
     -configuration Release \
     -destination "generic/platform=$PLATFORM" \
     -archivePath "$ARCHIVE_FILE"
