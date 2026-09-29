@@ -99,7 +99,7 @@ We may update this Privacy Policy occasionally to reflect changes in our practic
 ## Contact Us
 
 If you have questions about this Privacy Policy or our privacy practices:
-- **Email:** joelconn@gmail.com
+- **Email:** reversedrawingapp@gmail.com
 - **GitHub:** https://github.com/joelconn/ReverseDraw
 
 ## Compliance
