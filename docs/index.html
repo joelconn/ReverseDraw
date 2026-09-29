@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReverseDraw - Reverse Lottery Drawing for Events</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        .tagline {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .description {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .feature {
+            padding: 15px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .feature strong {
+            color: #667eea;
+        }
+        .links {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .link-button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        .link-button:hover {
+            background: #764ba2;
+        }
+        .link-button.secondary {
+            background: #f0f2f5;
+            color: #333;
+        }
+        .link-button.secondary:hover {
+            background: #e0e2e5;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎫 ReverseDraw</h1>
+        <p class="tagline">Reverse Lottery Drawing for Events</p>
+
+        <div class="description">
+            <p>ReverseDraw is a modern, elegant reverse-drawing lottery app designed for events, fundraisers, and community gatherings. Instead of the traditional "pick from the hat" experience, ReverseDraw brings excitement to drawing events with a sleek, interactive interface.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <strong>🎯 Interactive Drawing</strong>
+                <p>Two-screen setup with real-time history tracking and beautiful animations</p>
+            </div>
+            <div class="feature">
+                <strong>💰 Smart Splits</strong>
+                <p>Final Ten elimination and automatic pot splitting for multiple winners</p>
+            </div>
+            <div class="feature">
+                <strong>📱 Multi-Platform</strong>
+                <p>Native macOS and iPad apps with full split-screen support</p>
+            </div>
+            <div class="feature">
+                <strong>💾 Reliable</strong>
+                <p>Automatic session saving and full event archives</p>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="https://github.com/joelconn/ReverseDraw" class="link-button">GitHub Repository</a>
+            <a href="privacy-policy.html" class="link-button secondary">Privacy Policy</a>
+            <a href="mailto:joelconn@gmail.com" class="link-button secondary">Contact</a>
+        </div>
+
+        <div class="footer">
+            <p>ReverseDraw v1.5 | <a href="privacy-policy.html">Privacy Policy</a> | © 2026</p>
+        </div>
+    </div>
+</body>
+</html>
