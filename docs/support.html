@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReverseDraw - Support & Instructions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        h1 { font-size: 2.2em; color: #667eea; margin-bottom: 8px; }
+        .tagline { font-size: 1.1em; color: #666; margin-bottom: 40px; }
+        h2 {
+            font-size: 1.2em;
+            color: #667eea;
+            margin: 32px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #667eea;
+            display: inline-block;
+        }
+        p { margin-bottom: 12px; color: #444; }
+        .phase-list { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+        .phase-list li {
+            padding: 12px 16px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .phase-list li strong { color: #667eea; }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-right: 8px;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .action-list { list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 8px; }
+        .action-list li { padding: 10px 14px; background: #f8f9fa; border-radius: 8px; }
+        .action-list li strong { color: #333; }
+        pre {
+            background: #f0f2f5;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 0.88em;
+            overflow-x: auto;
+            margin: 8px 0 16px;
+        }
+        .shortcuts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .shortcut { display: flex; align-items: center; gap: 12px; }
+        kbd {
+            background: #e8eaed;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-size: 0.9em;
+            min-width: 60px;
+            text-align: center;
+        }
+        .note {
+            background: rgba(102, 126, 234, 0.08);
+            border-left: 3px solid #667eea;
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px;
+            margin: 12px 0;
+            font-size: 0.95em;
+            color: #555;
+        }
+        .links {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        .link-button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        .link-button:hover { background: #764ba2; }
+        .link-button.secondary { background: #f0f2f5; color: #333; }
+        .link-button.secondary:hover { background: #e0e2e5; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #666; text-align: center; }
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; }
+            h1 { font-size: 1.7em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ReverseDraw Support</h1>
+        <p class="tagline">Instructions and help for running your draw event</p>
+
+        <h2>Contact</h2>
+        <p>For help, email <a href="mailto:reversedrawingapp@gmail.com">reversedrawingapp@gmail.com</a>. We aim to respond within 1–2 business days.</p>
+
+        <h2>How It Works</h2>
+        <p>ReverseDraw is a reverse-lottery style draw app. Tickets are drawn one at a time and eliminated from the pool. The last ticket(s) remaining win the prize. The event runs through five phases in order:</p>
+        <ol class="phase-list">
+            <li><span class="step-num">1</span><strong>Setup</strong> — Configure your event name, ticket count, prize amounts, and special draw prizes. Import your guest list CSV if you have one.</li>
+            <li><span class="step-num">2</span><strong>Main Draw</strong> — Draw tickets one at a time. Each draw is shown on the Audience screen. Mark a ticket "Not Present" to void it and carry the prize forward.</li>
+            <li><span class="step-num">3</span><strong>Final Ten</strong> — Begins automatically after the Main Draw threshold. Eliminate contestants one by one, then press <strong>Split Pot</strong> to divide the prize among all remaining contestants.</li>
+            <li><span class="step-num">4</span><strong>Bonus Draw</strong> — All tickets re-enter the pool. Draw one ticket for the grand prize. If the winner is not present, draw again.</li>
+            <li><span class="step-num">5</span><strong>Complete</strong> — The event is finished and archived automatically. Start a new event from the Setup screen.</li>
+        </ol>
+
+        <h2>Preparing Your Guest List</h2>
+        <p>Create a <code>.csv</code> file with the following format (one row per ticket):</p>
+        <pre>TicketNumber,Name,SponsorLevel
+101,Jane Smith,Gold
+102,John Doe,Silver
+103,Alice Brown,</pre>
+        <p><code>SponsorLevel</code> is optional — leave it blank if not applicable. Import from the Setup screen before starting the event.</p>
+
+        <h2>During the Main Draw</h2>
+        <ul class="action-list">
+            <li><strong>Draw Next Ticket</strong> — Draws a random ticket and shows it on the Audience screen. Press again to dismiss the reveal and enable the next draw.</li>
+            <li><strong>Not Present</strong> — Marks the last drawn ticket as absent. The ticket is voided and any special prize carries over to the next draw position.</li>
+            <li><strong>Undo</strong> — Reverses the last draw. You can undo multiple draws in sequence.</li>
+        </ul>
+
+        <h2>During the Final Ten</h2>
+        <ul class="action-list">
+            <li><strong>Draw Elimination</strong> — Randomly eliminates one contestant. The prize split updates live.</li>
+            <li><strong>Not Present (menu)</strong> — Opens a list of contestants. Tap one to eliminate them manually if they are not present.</li>
+            <li><strong>Split Pot</strong> — Divides the Final Ten prize equally among all remaining contestants. You can split with any number remaining.</li>
+        </ul>
+
+        <h2>External Display / Projector</h2>
+        <p>Connect your Mac or iPad to a projector or external display <strong>before launching ReverseDraw</strong>. The Audience screen will automatically appear on the connected display. On Mac, if the Audience window closes, press the split-screen icon in the top-left of the Operator screen to reopen it.</p>
+
+        <h2>Keyboard Shortcuts</h2>
+        <div class="shortcuts">
+            <div class="shortcut"><kbd>Space</kbd> <span>Draw next ticket / dismiss reveal</span></div>
+            <div class="shortcut"><kbd>⌘Z</kbd> <span>Undo last draw</span></div>
+        </div>
+
+        <h2>Common Questions</h2>
+
+        <p><strong>The app crashed mid-draw. Did I lose my progress?</strong><br>
+        No. ReverseDraw saves automatically after every action. Relaunch and choose <strong>Resume</strong> on the Setup screen to pick up where you left off.</p>
+
+        <p><strong>Can I undo a draw?</strong><br>
+        Yes — use the Undo button in the Operator window (or ⌘Z) to reverse the most recent draw.</p>
+
+        <p><strong>Where is my data stored?</strong><br>
+        All data is stored locally on your device. Nothing is sent to the internet.</p>
+
+        <p><strong>What devices does ReverseDraw support?</strong><br>
+        ReverseDraw runs on Mac and iPad. Connect an external display or projector to either device for the two-screen experience.</p>
+
+        <div class="links">
+            <a href="index.html" class="link-button secondary">← Home</a>
+            <a href="privacy-policy.html" class="link-button secondary">Privacy Policy</a>
+            <a href="mailto:reversedrawingapp@gmail.com" class="link-button">Contact Support</a>
+        </div>
+
+        <div class="footer">
+            <p>ReverseDraw | © 2026</p>
+        </div>
+    </div>
+</body>
+</html>

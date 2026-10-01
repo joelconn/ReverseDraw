@@ -7,6 +7,7 @@ struct OperatorView: View {
     #endif
     @State private var showSettings = false
     @State private var showInfo = false
+    @State private var showHelp = false
 
     var drawCount: Int { state.drawHistory.count }
     var threshold: Int { state.config.finalTenThreshold }
@@ -41,6 +42,9 @@ struct OperatorView: View {
         #if os(macOS)
         .frame(minWidth: 640, minHeight: 520)
         #endif
+        .sheet(isPresented: $showHelp) {
+            HelpView()
+        }
     }
 
     // MARK: - Phase Header
@@ -120,6 +124,15 @@ struct OperatorView: View {
                     .padding(.horizontal, 10)
                     .foregroundStyle(.primary)
                     .buttonStyle(.bordered)
+
+                    Button(action: { showHelp.toggle() }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                    .font(.subheadline.bold())
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 10)
+                    .foregroundStyle(.primary)
+                    .buttonStyle(.bordered)
                 }
 
                 if showSettings {
@@ -129,6 +142,7 @@ struct OperatorView: View {
                 if showInfo {
                     eventInfoPanel
                 }
+
 
                 if state.phase == .drawing {
                     drawSection
